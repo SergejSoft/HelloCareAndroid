@@ -6,6 +6,31 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:actionMenuTextColor">@color/colorAccent</item>
+        <item name="colorControlNormal">@color/colorAccent</item>
+    </style>
+    <style name="Theme.Start" parent="@android:style/Theme.DeviceDefault.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/bg_splash</item>
+
+    </style>
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    <item name="colorControlNormal">@color/colorAccent</item>
+    </style>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="colorControlNormal">@color/colorAccent</item>
+    </style>
+    <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="colorControlNormal">#c5c5c5</item>
+        <item name="colorControlActivated">@android:color/darker_gray</item>
+        <item name="colorControlHighlight">@android:color/darker_gray</item>
+
     </style>
 
 </resources>

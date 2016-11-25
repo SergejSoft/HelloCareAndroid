@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">HelloCare</string>
+    <string name="password_required">Password required</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="email_required">Email required</string>
+    <string name="error">Error</string>
+    <string name="ok">OK</string>
+    <string name="email_invalid">Email invalid</string>
+    <string name="facebook_app_id">1229510013788306</string>
+    <string name="no_location_detected">No location detected</string>
+    <string name="preview">Preview</string>
 </resources>

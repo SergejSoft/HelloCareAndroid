@@ -1,0 +1,229 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   >
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp"
+
+
+            >
+            <TextView
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:id="@+id/preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:gravity="center"
+
+                android:text="@string/preview">
+            </TextView>
+            <TextView
+                android:maxLines="1"
+                android:layout_below="@id/preview"
+                android:ellipsize="end"
+                android:id="@+id/date_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/calendar"
+                android:text="test">
+
+
+            </TextView>
+            <LinearLayout
+                android:id="@+id/date_time_layout"
+                android:layout_below="@+id/date_address"
+                android:orientation="horizontal"
+android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <LinearLayout
+android:layout_weight="1"
+
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/time_start"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="5dp"
+
+                        android:gravity="center_vertical"
+                        android:drawableLeft="@drawable/clock"
+                        >
+
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/date_start"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:gravity="center_vertical"
+
+                        >
+
+
+                    </TextView>
+                </LinearLayout>
+                <View
+                    android:layout_width="1px"
+
+                    android:layout_height="match_parent"
+                    android:background="@android:color/darker_gray"/>
+                <LinearLayout
+                    android:layout_weight="1"
+
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/time_finish"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="5dp"
+
+                        android:gravity="center_vertical"
+                        android:drawableLeft="@drawable/clock"
+                        >
+
+
+                    </TextView>
+                    <TextView
+                        android:id="@+id/date_finish"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:gravity="center_vertical"
+
+                        >
+
+
+                    </TextView>
+                </LinearLayout>
+            </LinearLayout>
+            <TextView
+                android:layout_marginLeft="30dp"
+                android:id="@+id/duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:layout_alignLeft="@+id/date_address"
+                android:layout_below="@+id/date_time_layout"
+                android:text="test hours">
+
+
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/date_time_layout"
+                android:text="test km">
+            </TextView>
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:layout_alignLeft="@+id/date_address"
+                android:layout_below="@+id/duration"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/card"
+                android:text="test">
+
+
+            </TextView>
+            <LinearLayout
+                android:layout_below="@+id/price"
+                android:layout_alignLeft="@id/date_address"
+                android:layout_marginLeft="24dp"
+                android:id="@+id/services_layout"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"></LinearLayout>
+            <TextView
+                android:id="@+id/client"
+                android:gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="5dp"
+                android:layout_alignLeft="@+id/date_address"
+                android:layout_below="@+id/services_layout"
+                android:drawableLeft="@drawable/profile"
+                android:text="test">
+
+
+            </TextView>
+
+
+        </RelativeLayout>
+
+    </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <ImageButton
+            android:layout_weight="1"
+            android:id="@+id/refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/super_like_btn"
+            android:src="@drawable/refresh"/>
+        <ImageButton
+            android:layout_weight="1"
+            android:id="@+id/decline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/super_like_btn"
+            android:src="@drawable/close"/>
+        <ImageButton
+            android:layout_weight="1"
+            android:id="@+id/accept"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/super_like_btn"
+            android:src="@drawable/check"/>
+        <ImageButton
+            android:layout_weight="1"
+            android:id="@+id/show_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/super_like_btn"
+            android:src="@drawable/map_pin"/>
+    </LinearLayout>
+</RelativeLayout>

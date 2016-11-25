@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    card_view:cardCornerRadius="0dp">
+
+    <RelativeLayout
+        android:padding="24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+
+        >
+
+
+
+        <TextView
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:id="@+id/date_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical"
+            android:drawableLeft="@drawable/calendar"
+            android:text="test">
+
+
+        </TextView>
+
+        <TextView
+            android:layout_marginLeft="30dp"
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="5dp"
+            android:layout_alignLeft="@+id/date_address"
+            android:layout_below="@+id/date_address"
+            android:text="test hours">
+
+
+
+        </TextView>
+
+        <TextView
+            android:id="@+id/distance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="5dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/date_address"
+            android:text="test km">
+        </TextView>
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="5dp"
+            android:layout_alignLeft="@+id/date_address"
+            android:layout_below="@+id/duration"
+            android:gravity="center_vertical"
+            android:drawableLeft="@drawable/card"
+            android:text="test">
+
+
+        </TextView>
+        <LinearLayout
+            android:layout_below="@+id/price"
+            android:layout_alignLeft="@id/date_address"
+            android:layout_marginLeft="24dp"
+            android:id="@+id/services_layout"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content"></LinearLayout>
+        <TextView
+            android:id="@+id/client"
+            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="5dp"
+            android:layout_alignLeft="@+id/date_address"
+            android:layout_below="@+id/services_layout"
+            android:drawableLeft="@drawable/profile"
+            android:text="test">
+
+
+        </TextView>
+
+    </RelativeLayout>
+
+
+</android.support.v7.widget.CardView>
