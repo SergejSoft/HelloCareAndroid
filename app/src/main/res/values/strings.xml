@@ -11,4 +11,10 @@
     <string name="facebook_app_id">1229510013788306</string>
     <string name="no_location_detected">No location detected</string>
     <string name="preview">Preview</string>
+    <string name="mister">Mr</string>
+    <string name="missis">Mrs</string>
+    <string name="today">Today</string>
+    <string name="hours">Hours</string>
+    <string name="hour">Hour</string>
+    <string name="client">Client</string>
 </resources>

@@ -3,9 +3,11 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card_view"
-
+    android:stateListAnimator="@animator/job_selection"
+    android:foreground="?android:attr/selectableItemBackground"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:padding="16dp"
     android:layout_gravity="center"
     card_view:cardCornerRadius="0dp">
 
@@ -20,6 +22,8 @@
 
 
         <TextView
+            android:fontFamily="sans-serif-light"
+            android:textSize="24dp"
             android:maxLines="1"
             android:ellipsize="end"
             android:id="@+id/date_address"
@@ -34,6 +38,8 @@
         </TextView>
 
         <TextView
+            android:fontFamily="sans-serif-light"
+            android:textSize="24dp"
             android:layout_marginLeft="30dp"
             android:id="@+id/duration"
             android:layout_width="wrap_content"
@@ -48,13 +54,16 @@
         </TextView>
 
         <TextView
+            android:fontFamily="sans-serif-light"
+            android:textSize="20dp"
             android:id="@+id/distance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawablePadding="5dp"
+            android:textColor="@color/green"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/date_address"
-            android:text="test km">
+            android:text="10 km">
         </TextView>
 
         <TextView
@@ -66,7 +75,9 @@
             android:layout_below="@+id/duration"
             android:gravity="center_vertical"
             android:drawableLeft="@drawable/card"
-            android:text="test">
+            android:fontFamily="sans-serif-light"
+            android:text="test"
+            android:textSize="24dp">
 
 
         </TextView>
@@ -79,7 +90,10 @@
             android:orientation="horizontal"
             android:layout_height="wrap_content"></LinearLayout>
         <TextView
+            android:fontFamily="sans-serif-light"
+            android:textSize="24dp"
             android:id="@+id/client"
+            android:maxLines="1"
             android:gravity="center_vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

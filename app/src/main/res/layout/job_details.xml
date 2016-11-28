@@ -2,8 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   >
+    android:layout_height="match_parent">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -28,100 +27,117 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="20dp"
-
-
+            android:paddingTop="10dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
             >
+
             <TextView
-                android:maxLines="1"
-                android:ellipsize="end"
                 android:id="@+id/preview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
-                android:gravity="center"
-
-                android:text="@string/preview">
-            </TextView>
-            <TextView
-                android:maxLines="1"
-                android:layout_below="@id/preview"
                 android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:maxLines="1"
+                android:text="@string/preview"
+                android:textColor="@color/colorAccent"
+                android:textSize="36dp"></TextView>
+
+            <TextView
                 android:id="@+id/date_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawablePadding="5dp"
-                android:gravity="center_vertical"
+                android:layout_below="@id/preview"
                 android:drawableLeft="@drawable/calendar"
-                android:text="test">
+                android:drawablePadding="5dp"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-light"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="test"
+                android:textSize="24dp">
 
 
             </TextView>
+
             <LinearLayout
                 android:id="@+id/date_time_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/date_address"
-                android:orientation="horizontal"
-android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <LinearLayout
-android:layout_weight="1"
+                android:orientation="horizontal">
 
-                    android:orientation="vertical"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/time_start"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/clock"
                         android:drawablePadding="5dp"
+                        android:fontFamily="sans-serif-medium"
 
                         android:gravity="center_vertical"
-                        android:drawableLeft="@drawable/clock"
-                        >
+                        android:textSize="36dp">
 
 
                     </TextView>
+
                     <TextView
                         android:id="@+id/date_start"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
+                        android:fontFamily="sans-serif-thin"
                         android:gravity="center_vertical"
+                        android:textSize="20dp"
+                        android:layout_marginLeft="35dp"
 
                         >
 
 
                     </TextView>
                 </LinearLayout>
+
                 <View
                     android:layout_width="1px"
-
+                    android:layout_marginRight="24dp"
                     android:layout_height="match_parent"
-                    android:background="@android:color/darker_gray"/>
-                <LinearLayout
-                    android:layout_weight="1"
+                    android:background="@android:color/darker_gray" />
 
-                    android:orientation="vertical"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/time_finish"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:drawablePadding="5dp"
-
-                        android:gravity="center_vertical"
                         android:drawableLeft="@drawable/clock"
-                        >
+                        android:drawablePadding="5dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center_vertical"
+                        android:textSize="36dp">
 
 
                     </TextView>
+
                     <TextView
                         android:id="@+id/date_finish"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-
                         android:gravity="center_vertical"
+                        android:textSize="20dp"
+                        android:fontFamily="sans-serif-thin"
+                        android:layout_marginLeft="35dp"
 
                         >
 
@@ -129,101 +145,195 @@ android:layout_weight="1"
                     </TextView>
                 </LinearLayout>
             </LinearLayout>
+
+            <View
+                android:layout_marginTop="5dp"
+                android:id="@+id/separator1"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@+id/date_time_layout"
+                android:background="@android:color/darker_gray" />
+
             <TextView
-                android:layout_marginLeft="30dp"
                 android:id="@+id/duration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/separator1"
+                android:layout_centerInParent="true"
+                android:layout_marginLeft="30dp"
                 android:drawablePadding="5dp"
-                android:layout_alignLeft="@+id/date_address"
-                android:layout_below="@+id/date_time_layout"
-                android:text="test hours">
-
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:text="test hours"
+                android:textSize="36dp">
 
 
             </TextView>
 
-            <TextView
-                android:id="@+id/distance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="5dp"
-                android:layout_alignParentRight="true"
-                android:layout_below="@+id/date_time_layout"
-                android:text="test km">
-            </TextView>
+            <View
+                android:id="@+id/separator2"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@+id/duration"
+                android:background="@android:color/darker_gray" />
+
 
             <TextView
+                android:layout_marginTop="10dp"
                 android:id="@+id/price"
+                android:fontFamily="sans-serif-light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawablePadding="5dp"
                 android:layout_alignLeft="@+id/date_address"
                 android:layout_below="@+id/duration"
-                android:gravity="center_vertical"
                 android:drawableLeft="@drawable/card"
-                android:text="test">
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text="test"
+                android:textSize="24dp">
 
 
             </TextView>
-            <LinearLayout
-                android:layout_below="@+id/price"
-                android:layout_alignLeft="@id/date_address"
-                android:layout_marginLeft="24dp"
-                android:id="@+id/services_layout"
-                android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:layout_height="wrap_content"></LinearLayout>
+
             <TextView
-                android:id="@+id/client"
-                android:gravity="center_vertical"
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/full_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawablePadding="5dp"
                 android:layout_alignLeft="@+id/date_address"
-                android:layout_below="@+id/services_layout"
-                android:drawableLeft="@drawable/profile"
-                android:text="test">
+                android:layout_below="@+id/price"
+                android:drawableLeft="@drawable/map_pin_grey"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text="test"
+                android:textSize="24dp">
 
 
             </TextView>
 
+            <TextView
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/date_address"
+                android:layout_below="@+id/full_address"
+                android:drawableLeft="@drawable/phone"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:text="test"
+                android:textSize="24dp">
 
+
+            </TextView>
+
+            <View
+                android:layout_marginTop="10dp"
+                android:id="@+id/separator3"
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_below="@+id/phone"
+                android:background="@android:color/darker_gray" />
+
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:id="@+id/client"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/separator3"
+                android:drawableLeft="@drawable/profile"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:fontFamily="sans-serif-light"
+                android:text="test"
+                android:textSize="24dp">
+
+
+            </TextView>
+
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:id="@+id/services_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/date_address"
+                android:layout_below="@+id/client"
+                android:layout_marginLeft="24dp"
+                android:orientation="horizontal"
+                android:textSize="24dp"></LinearLayout>
+
+            <TextView
+                android:layout_marginTop="10dp"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/services_layout"
+                android:drawableLeft="@drawable/description"
+                android:drawablePadding="5dp"
+                android:gravity="center_vertical"
+                android:text="test"
+                android:textSize="24dp">
+
+
+            </TextView>
+
+            <TextView
+                android:layout_marginTop="15dp"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/distance"
+                android:layout_marginLeft="30dp"
+          android:textColor="@color/green"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@id/date_address"
+                android:layout_below="@+id/description"
+                android:drawablePadding="5dp"
+                android:text="test km"
+                android:textSize="20dp"></TextView>
         </RelativeLayout>
 
     </ScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
+        android:orientation="horizontal">
+
         <ImageButton
-            android:layout_weight="1"
             android:id="@+id/refresh"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/super_like_btn"
-            android:src="@drawable/refresh"/>
-        <ImageButton
             android:layout_weight="1"
+            android:background="@drawable/super_like_btn"
+            android:src="@drawable/refresh" />
+
+        <ImageButton
             android:id="@+id/decline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/super_like_btn"
-            android:src="@drawable/close"/>
-        <ImageButton
             android:layout_weight="1"
+            android:background="@drawable/super_like_btn"
+            android:src="@drawable/close" />
+
+        <ImageButton
             android:id="@+id/accept"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/super_like_btn"
-            android:src="@drawable/check"/>
-        <ImageButton
             android:layout_weight="1"
+            android:background="@drawable/super_like_btn"
+            android:src="@drawable/check" />
+
+        <ImageButton
             android:id="@+id/show_map"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/super_like_btn"
-            android:src="@drawable/map_pin"/>
+            android:src="@drawable/map_pin" />
     </LinearLayout>
 </RelativeLayout>

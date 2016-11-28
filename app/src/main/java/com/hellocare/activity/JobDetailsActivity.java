@@ -24,6 +24,8 @@ import com.hellocare.model.StatusType;
 import com.hellocare.network.ApiFacade;
 import com.hellocare.util.FormatUtils;
 
+import java.util.Arrays;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,9 +40,10 @@ public class JobDetailsActivity extends AppCompatActivity {
     public LinearLayout servicesLayout;
 private View accept, decline, refresh, goToMap;
 
-    TextView price;
+    TextView price, description, phone;
     private TextView timeStart, dateStart, dateFinish;
     private TextView timeFinish;
+    private TextView fullAddress;
 
     private void fetchJobDetails(int id) {
 
@@ -66,7 +69,11 @@ private View accept, decline, refresh, goToMap;
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
+        getSupportActionBar().setIcon(R.drawable.logo_red);
+        
+        phone = (TextView) findViewById(R.id.phone);
+        description = (TextView) findViewById(R.id.description);
+        fullAddress = (TextView) findViewById(R.id.full_address);
         dateAndAddress = (TextView) findViewById(R.id.date_address);
         distance = (TextView) findViewById(R.id.distance);
         duration = (TextView) findViewById(R.id.duration);
@@ -156,11 +163,18 @@ accept =findViewById(R.id.accept);
         timeFinish.setText(FormatUtils.convertTimestamp(job.dates[0].ends_at,FormatUtils.PATTERN_TIME) );
         distance.setText(job.confirmation + "");
         duration.setText(job.dates[0].hours + "");
+        phone.setText(job.client.phone);
+        client.setText(Arrays.toString(job.patients).replace("[","").replace("]",""));
+        client.setVisibility(job.confirmation?View.VISIBLE:View.GONE);
+        phone.setVisibility(job.confirmation?View.VISIBLE:View.GONE);
+        description.setText(job.description);
+        fullAddress.setText(job.confirmation?job.location.full_address:job.location.secret_address);
+
         price.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(this,
                 PaymentType.fromValue(job.payment_method).getDrawableResId()), null, null, null);
         price.setText(job.amount + " " + job.currency);
-        client.setText(job.client.first_name + " " + job.client.last_name);
-        client.setVisibility(View.GONE);
+
+
         servicesLayout.removeAllViewsInLayout();
         for (int i = 0; i < job.services.length; i++) {
             ImageView imageView = new ImageView(servicesLayout.getContext());

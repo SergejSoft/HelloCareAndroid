@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         getSupportActionBar().setIcon(R.drawable.logo_red);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);

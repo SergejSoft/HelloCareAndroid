@@ -88,6 +88,7 @@ public class JobsListFragment extends Fragment {
         // use a linear layout manager
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this.getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this.getActivity()));
         Log.d("==Ela==",getArguments().getString(EXTRA_TYPE));
         StatusType type = StatusType.fromValue(getArguments().getString(EXTRA_TYPE));
         fetchJobs(type);

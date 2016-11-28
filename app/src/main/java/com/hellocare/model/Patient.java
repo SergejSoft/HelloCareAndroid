@@ -13,5 +13,9 @@ public class Patient implements Serializable {
     public String gender;
     @SerializedName("age")
     public int age;
+    @Override
+    public String toString() {
+        return first_name + " "+last_name + ", "+age;
+    }
 
 }

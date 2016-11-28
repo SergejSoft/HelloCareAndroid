@@ -3,6 +3,7 @@ package com.hellocare;
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,8 @@ import com.hellocare.model.Job;
 import com.hellocare.model.PaymentType;
 import com.hellocare.model.ServiceType;
 import com.hellocare.util.FormatUtils;
+
+import java.util.Arrays;
 
 
 public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.ViewHolder> {
@@ -62,14 +65,26 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.ViewHolder> {
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        holder.dateAndAddress.setText(FormatUtils.convertTimestamp(mDataset[position].dates[0].starts_at,FormatUtils.PATTERN_DATE) +
-                " " + FormatUtils.convertTimestamp(mDataset[position].dates[0].ends_at, FormatUtils.PATTERN_TIME) + " " + mDataset[position].location.full_address);
-        holder.distance.setText(mDataset[position].confirmation + "");
-        holder.duration.setText(mDataset[position].dates[0].hours + "");
+        String dateAdress = "<b>" + FormatUtils.timestampToProperString(holder.client.getContext(),
+                mDataset[position].dates[0].starts_at) + "</b>" +" "+
+                (mDataset[position].confirmation? mDataset[position].location.full_address: mDataset[position].location.secret_address) ;
+        holder.dateAndAddress.setText(Html.fromHtml(dateAdress));
+       // holder.distance.setText(mDataset[position].confirmation + "");
+        holder.duration.setText("("+FormatUtils.formatDecimal(mDataset[position].dates[0].hours)+" "+
+                holder.duration.getContext().getString(R.string.hours)+")");
         holder.price.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(holder.price.getContext(),
                 PaymentType.fromValue(mDataset[position].payment_method).getDrawableResId()), null,null,null);
-        holder.price.setText(mDataset[position].amount + " " + mDataset[position].currency);
-        holder.client.setText(mDataset[position].client.first_name + " " + mDataset[position].client.last_name);
+        String priceString = "<b>" + FormatUtils.formatCurrency(mDataset[position].amount, mDataset[position].currency)+", " +
+                "</b>"+FormatUtils.formatCurrency(mDataset[position].hourly_rate,
+                mDataset[position].currency)+"/"+holder.client.getContext().getString(R.string.hour)
+
+              ;
+        holder.price.setText(Html.fromHtml(priceString));
+        String clientString = "<b>" +  holder.client.getContext().getString(R.string.client) + ": "+"</b>" +
+                Arrays.toString(mDataset[position].patients).replace("[","").replace("]","");
+        holder.client.setText(Html.fromHtml(clientString));
+
+        holder.client.setVisibility(mDataset[position].confirmation?View.VISIBLE:View.GONE);
 
                             holder.servicesLayout.removeAllViewsInLayout();
                             for (int i = 0; i < mDataset[position].services.length; i++) {

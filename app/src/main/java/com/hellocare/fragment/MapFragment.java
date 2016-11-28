@@ -63,6 +63,7 @@ import com.hellocare.util.ResourceUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -176,8 +177,8 @@ public class MapFragment extends Fragment {
                                 price.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(getContext(),
                                         PaymentType.fromValue(job.payment_method).getDrawableResId()), null, null, null);
                                 price.setText(job.amount + " " + job.currency);
-                                client.setText(job.client.first_name + " " + job.client.last_name);
-                                client.setVisibility(View.GONE);
+                                client.setText(Arrays.toString(job.patients).replace("[","").replace("]",""));
+                                client.setVisibility(job.confirmation?View.VISIBLE:View.GONE);
                                 servicesLayout.removeAllViewsInLayout();
                                 for (int i = 0; i < job.services.length; i++) {
                                     ImageView imageView = new ImageView(servicesLayout.getContext());
