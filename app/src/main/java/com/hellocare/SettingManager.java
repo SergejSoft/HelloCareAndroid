@@ -3,6 +3,7 @@ package com.hellocare;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.location.Location;
 import android.util.Base64;
 import android.util.Log;
 
@@ -21,8 +22,12 @@ public class SettingManager {
 
     private static SharedPreferences mSharedPreferences;
     private Context mContext;
-
+private  Location currentLocation;
     public static final String TOKEN = "Token";
+
+    public Location getCurrentLocation() {
+        return currentLocation;
+    }
 
     private String prefix = "HelloCare";
 
@@ -99,4 +104,7 @@ public class SettingManager {
     }
 
 
+    public void setCurrentLocation(Location currentLocation) {
+        this.currentLocation = currentLocation;
+    }
 }

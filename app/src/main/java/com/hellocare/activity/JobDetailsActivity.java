@@ -1,10 +1,14 @@
 package com.hellocare.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -17,6 +21,7 @@ import android.widget.TextView;
 import com.hellocare.JobsAdapter;
 import com.hellocare.MainActivity;
 import com.hellocare.R;
+import com.hellocare.SettingManager;
 import com.hellocare.model.Job;
 import com.hellocare.model.PaymentType;
 import com.hellocare.model.ServiceType;
@@ -99,13 +104,49 @@ accept =findViewById(R.id.accept);
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                acceptJob(id);
+                final AlertDialog.Builder builder =
+                        new AlertDialog.Builder(view.getContext());
+                builder.setTitle(getString(R.string.take)+"?");
+                builder.setMessage(getString(R.string.take_confirmation));
+                builder.setPositiveButton(getString(R.string.take), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        acceptJob(id);
+                    }
+                });
+                builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
+                builder.show();
+
             }
         });
         decline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                declineJob(id);
+                final AlertDialog.Builder builder =
+                        new AlertDialog.Builder(view.getContext());
+                builder.setTitle(getString(R.string.not_interested)+"?");
+                builder.setMessage(getString(R.string.decline_confirmation));
+                builder.setPositiveButton(getString(R.string.not_interested), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        declineJob(id);
+                    }
+                });
+                builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+
+                builder.show();
+
             }
         });
         refresh.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +159,7 @@ accept =findViewById(R.id.accept);
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(view.getContext(), MainActivity.class);
-
+intent.putExtra(Statics.CURRENT_TAB, 2);
                 startActivity(intent);
 
             }
@@ -155,25 +196,52 @@ accept =findViewById(R.id.accept);
     }
 
     private void populateJob(Job job) {
-        dateAndAddress.setText(FormatUtils.convertTimestamp(job.dates[0].starts_at,FormatUtils.PATTERN_DATE) +
-                " " + FormatUtils.convertTimestamp(job.dates[0].ends_at,FormatUtils.PATTERN_DATE) + " " + job.location.full_address);
+
         dateStart.setText(FormatUtils.convertTimestamp(job.dates[0].starts_at,FormatUtils.PATTERN_DATE) );
         timeStart.setText(FormatUtils.convertTimestamp(job.dates[0].starts_at,FormatUtils.PATTERN_TIME) );
         dateFinish.setText(FormatUtils.convertTimestamp(job.dates[0].ends_at,FormatUtils.PATTERN_DATE) );
         timeFinish.setText(FormatUtils.convertTimestamp(job.dates[0].ends_at,FormatUtils.PATTERN_TIME) );
-        distance.setText(job.confirmation + "");
-        duration.setText(job.dates[0].hours + "");
+
+
         phone.setText(job.client.phone);
         client.setText(Arrays.toString(job.patients).replace("[","").replace("]",""));
         client.setVisibility(job.confirmation?View.VISIBLE:View.GONE);
         phone.setVisibility(job.confirmation?View.VISIBLE:View.GONE);
-        description.setText(job.description);
+
         fullAddress.setText(job.confirmation?job.location.full_address:job.location.secret_address);
 
-        price.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(this,
-                PaymentType.fromValue(job.payment_method).getDrawableResId()), null, null, null);
-        price.setText(job.amount + " " + job.currency);
 
+        String dateAdress = "<b>" + FormatUtils.timestampToProperString(this,
+                job.dates[0].starts_at) + "</b>" +" "+
+                (job.confirmation? job.location.full_address: job.location.secret_address) ;
+        dateAndAddress.setText(Html.fromHtml(dateAdress));
+        if (SettingManager.getInstance().getCurrentLocation()!=null){
+            Location location = new Location("jobLocation");
+
+            location.setLatitude(job.location.lat);
+            location.setLongitude(job.location.lng);
+
+            float dist = SettingManager.getInstance().getCurrentLocation().distanceTo(location);
+            distance.setText(Math.round(dist/1000 )+" "+getString(R.string.km)+
+                    " "+getString(R.string.from_you));
+        }
+        else {distance.setVisibility(View.GONE);}
+        duration.setText(FormatUtils.formatDecimal(job.dates[0].hours)+" "+
+               getString(R.string.hours));
+        price.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(this,
+                PaymentType.fromValue(job.payment_method).getDrawableResId()), null,null,null);
+        String priceString = "<b>" + FormatUtils.formatCurrency(job.amount, job.currency)+", " +
+                "</b>"+FormatUtils.formatCurrency(job.hourly_rate,
+                job.currency)+"/"+getString(R.string.hour)
+
+                ;
+        price.setText(Html.fromHtml(priceString));
+        String clientString = "<b>" +  this.getString(R.string.client) + ": "+"</b>" +
+                Arrays.toString(job.patients).replace("[","").replace("]","");
+        client.setText(Html.fromHtml(clientString));
+        String descriptionString = "<b>" +  this.getString(R.string.description) + ": "+"</b>" + "</br>"+
+               job.description;
+        description.setText(Html.fromHtml(descriptionString));
 
         servicesLayout.removeAllViewsInLayout();
         for (int i = 0; i < job.services.length; i++) {

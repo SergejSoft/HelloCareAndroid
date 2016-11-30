@@ -1,6 +1,7 @@
 package com.hellocare;
 
 import android.content.Intent;
+import android.location.Location;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -69,7 +70,16 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.ViewHolder> {
                 mDataset[position].dates[0].starts_at) + "</b>" +" "+
                 (mDataset[position].confirmation? mDataset[position].location.full_address: mDataset[position].location.secret_address) ;
         holder.dateAndAddress.setText(Html.fromHtml(dateAdress));
-       // holder.distance.setText(mDataset[position].confirmation + "");
+        if (SettingManager.getInstance().getCurrentLocation()!=null){
+            Location location = new Location("jobLocation");
+
+            location.setLatitude(mDataset[position].location.lat);
+            location.setLongitude(mDataset[position].location.lng);
+
+            float distance = SettingManager.getInstance().getCurrentLocation().distanceTo(location);
+        holder.distance.setText(Math.round(distance/1000 )+" "+holder.distance.getContext().getString(R.string.km)+ " "+holder.distance.getContext().getString(R.string.from_you));
+        }
+        else {holder.distance.setVisibility(View.GONE);}
         holder.duration.setText("("+FormatUtils.formatDecimal(mDataset[position].dates[0].hours)+" "+
                 holder.duration.getContext().getString(R.string.hours)+")");
         holder.price.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(holder.price.getContext(),
@@ -108,6 +118,34 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.ViewHolder> {
             }
         });
 
+        /*: [{"id":2,"created_at":"2016-11-17T12:52:39+01:00",
+        "amount":"228.0","currency":"EUR","hourly_rate":"28.5",
+        "duration":8.0,"payment_method":"cash","status":"new",
+        "confirmation":false,"flexible":false,"description":"",
+        "services":[{"name":"cooking"},{"name":"shopping"},{"name":"support"}],
+        "client":{"first_name":"Maite","last_name":"Lancaster","phone":"+632-21-1460277",
+        "email":"iamdeadgeist+1@gmail.com"},
+
+        "dates":[
+        {"starts_at":"2016-12-10T10:30:00+01:00","ends_at":"2016-12-10T12:30:00+01:00","hours":2.0},
+        {"starts_at":"2016-12-08T12:30:00+01:00", "ends_at":"2016-12-08T14:30:00+01:00","hours":2.0},
+        {"starts_at":"2016-12-08T09:00:00+01:00","ends_at":"2016-12-08T11:00:00+01:00","hours":2.0},
+        {"starts_at":"2016-12-07T07:30:00+01:00","ends_at":"2016-12-07T09:30:00+01:00","hours":2.0}]
+
+        ,"location":{"full_address":"Odentaler 13 Köln 51069  DE","secret_address":"Köln 51069","zipcode":51069,"lat":51.0011483,"lng":7.0425768},"patients":[{"first_name":"Geist","last_name":"Wargeist","gender":"male","age":50}]},{"id":2,"created_at":"2016-11-17T12:52:39+01:00","amount":"228.0","currency":"EUR","hourly_rate":"28.5","duration":8.0,"payment_method":"cash","status":"new","confirmation":false,"flexible":false,"description":"","services":[{"name":"cooking"},{"name":"shopping"},{"name":"support"}],"client":{"first_name":"Maite","last_name":"Lancaster","phone":"+632-21-1460277","email":"iamdeadgeist+1@gmail.com"},"dates":[{"starts_at":"2016-12-10T10:30:00+01:00","ends_at":"2016-12-10T12:30:00+01:00","hours":2.0},{"starts_at":"2016-12-08T12:30:00+01:00","ends_at":"2016-12-08T14:30:00+01:00","hours":2.0},{"starts_at":"2016-12-08T09:00:00+01:00","ends_at":"2016-12-08T11:00:00+01:00","hours":2.0},{"starts_at":"2016-12-07T07:30:00+01:00","ends_at":"2016-12-07T09:30:00+01:00","hours":2.0}],"location":{"full_address":"Odentaler 13 Köln 51069  DE","secret_address":"Köln 51069","zipcode":51069,"lat":51.0011483,"lng":7.0425768},"patients":[{"first_name":"Geist","last_name":"Wargeist","gender":"male","age":50}]},{"id":2,"created_at":"2016-11-17T12:52:39+01:00","amount":"228.0","currency":"EUR","hourly_rate":"28.5","duration":8.0,"payment_method":"cash","status":"new","confirmation":false,"flexible":false,"description":"","services":[{"name":"cooking"},{"name":"shopping"},{"name":"support"}],"client":{"first_name":"Maite","last_name":"Lancaster","phone":"+632-21-1460277","email":"iamdeadgeist+1@gmail.com"},"dates":[{"starts_at":"2016-12-10T10:30:00+01:00","ends_at":"2016-12-10T12:30:00+01:00","hours":2.0},{"starts_at":"2016-12-08T12:30:00+01:00","ends_at":"2016-12-08T14:30:00+01:00","hours":2.0},{"starts_at":"2016-12-08T09:00:00+01:00","ends_at":"2016-12-08T11:00:00+01:00","hours":2.0},{"starts_at":"2016-12-07T07:30:00+01:00","ends_at":"2016-12-07T09:30:00+01:00","hours":2.0}],"location":{"full_address":"Odentaler 13 Köln 51069  DE","secret_address":"Köln 51069","zipcode":51069,"lat":51.0011483,"lng":7.0425768},"patients":[{"first_name":"Geist","last_name":"Wargeist","gender":"male","age":50}]},{"id":2,"created_at":"2016-11-17T12:52:39+01:00","amount":"228.0","currency":"EUR","hourly_rate":"28.5","duration":8.0,"payment_method":"cash","status":"new","confirmation":false,"flexible":false,"description":"","services":[{"name":"cooking"},{"name":"shopping"},{"name":"support"}],"client":{"first_name":"Maite","last_name":"Lancaster","phone":"+632-21-1460277","email":"iamdeadgeist+1@gmail.com"},"dates":[{"starts_at":"2016-12-10T10:30:00+01:00","ends_at":"2016-12-10T12:30:00+01:00","hours":2.0},{"starts_at":"2016-12-08T12:30:00+01:00","ends_at":"2016-12-08T14:30:00+01:00","hours":2.0},{"starts_at":"2016-12-08T09:00:00+01:00","ends_at":"2016-12-08T11:00:00+01:00","hours":2.0},{"starts_at":"2016-12-07T07:30:00+01:00","ends_at":"2016-12-07T09:30:00+01:00","hours":2.0}],"location":{"full_address":"Odentaler 13 Köln 51069  DE","secret_address":"Köln 51069","zipcode":51069,"lat":51.0011483,"lng":7.0425768},"patients":[{"first_name":"Geist","last_name":"Wargeist","gender":"male","age":5
+11-29 18:08:37.776 19168-11907/com.hellocare D/OkHttp: 0}]},
+
+{"id":3,"created_at":"2016-11-21T13:58:11+01:00",
+"amount":"114.0",
+"currency":"EUR","hourly_rate":"28.5","duration":4.0,"payment_method":"cash","status":"new","confirmation":true,"flexible":true,
+"description":"","services":[{"name":"cooking"},{"name":"shopping"},{"name":"support"}],
+"client":{"first_name":"Maite","last_name":"Lancaster","phone":"+632-21-1460277","email":"iamdeadgeist+1@gmail.com"},
+
+"dates":[{"starts_at":"2016-12-02T12:30:00+01:00","ends_at":"2016-12-02T14:30:00+01:00","hours":2.0},
+{"starts_at":"2016-11-30T09:00:00+01:00","ends_at":"2016-11-30T11:00:00+01:00","hours":2.0}]
+
+,"location":{"full_address":"Odentaler 13 Köln 51069  DE","secret_address":"Köln 51069","zipcode":51069,"lat":51.0011483,"lng":7.0425768},"patients":[{"first_name":"Geist","last_name":"Wargeist","gender":"male","age":50}]},{"id":3,"created_at":"2016-11-21T13:58:11+01:00","amount":"114.0","currency":"EUR","hourly_rate":"28.5","duration":4.0,"payment_method":"cash","status":"new","confirmation":true,"flexible":true,"description":"","services":[{"name":"cooking"},{"name":"shopping"},{"name":"support"}],"client":{"first_name":"Maite","last_name":"Lancaster","phone":"+632-21-1460277","email":"iamdeadgeist+1@gmail.com"},"dates":[{"starts_at":"2016-12-02T12:30:00+01:00","ends_at":"2016-12-02T14:30:00+01:00","hours":2.0},{"starts_at":"2016-11-30T09:00:00+01:00","ends_at":"2016-11-30T11:00:00+01:00","hours":2.0}],"location":{"full_address":"Odentaler 13 Köln 51069  DE","secret_address":"Köln 51069","zipcode":51069,"lat":51.0011483,"lng":7.0425768},"patients":[{"first_name":"Geist","last_name":"Wargeist","gender":"male","age":50}]}]
+11-29 18:08:37.776 19168-11907/com.hellocare D/OkHttp: <-- END HTTP*/
 
     }
 
