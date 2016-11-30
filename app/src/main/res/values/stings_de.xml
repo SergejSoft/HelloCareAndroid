@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">HelloCare</string>
+    <string name="password_required">Password required</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="email_required">Email required</string>
+    <string name="error">Error</string>
+    <string name="ok">OK</string>
+    <string name="email_invalid">Email invalid</string>
+    <string name="facebook_app_id">1229510013788306</string>
+    <string name="no_location_detected">No location detected</string>
+    <string name="preview">Preview</string>
+    <string name="mister">Mr</string>
+    <string name="missis">Mrs</string>
+    <string name="today">Today</string>
+    <string name="hours">Hours</string>
+    <string name="hour">Hour</string>
+    <string name="client">Client</string>
+    <string name="take">Take</string>
+    <string name="take_confirmation">Tapping the check indicates you take the order</string>
+    <string name="cancel">Cancel</string>
+    <string name="not_interested">Not interested</string>
+    <string name="decline_confirmation">Tapping the X indicates you\'re not interested in the order</string>
+    <string name="log_out">Log out</string>
+    <string name="help">Help</string>
+    <string name="description">Description</string>
+    <string name="customer_care">Customer care</string>
+    <string name="from_you">from you</string>
+    <string name="km">km</string>
+    <string name="notification_new_order">New order</string>
+    <string name="order_not_available">Sorry, the order is not available</string>
+    <string name="continue_searching">Continue searching</string>
+</resources>
