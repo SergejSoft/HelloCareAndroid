@@ -236,8 +236,7 @@ public class MapFragment extends Fragment {
                                     location.setLongitude(job.location.lng);
 
                                     float dist = SettingManager.getInstance().getCurrentLocation().distanceTo(location);
-                                    distance.setText(Math.round(dist / 1000) + " " + getContext().getString(R.string.km) +
-                                            " " + getContext().getString(R.string.from_you));
+                                    distance.setText(Math.round(dist / 1000) + " " + getContext().getString(R.string.km));
                                 } else {
                                     distance.setVisibility(View.GONE);
                                 }

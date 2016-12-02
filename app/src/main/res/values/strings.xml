@@ -31,4 +31,7 @@
     <string name="notification_new_order">New order</string>
     <string name="order_not_available">Sorry, the order is not available</string>
     <string name="continue_searching">Continue searching</string>
+    <string name="tutorial_list">Tap to open the order preview. See your distance to a client in a green circle</string>
+    <string name="tutorial_calendar">See all already accepted orders in your calendar and review the timetable</string>
+    <string name="tutorial_map">Choose your orders on map near alredy accepted</string>
 </resources>

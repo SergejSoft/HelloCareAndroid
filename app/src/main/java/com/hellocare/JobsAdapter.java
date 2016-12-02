@@ -77,7 +77,7 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.ViewHolder> {
             location.setLongitude(mDataset[position].location.lng);
 
             float distance = SettingManager.getInstance().getCurrentLocation().distanceTo(location);
-        holder.distance.setText(Math.round(distance/1000 )+" "+holder.distance.getContext().getString(R.string.km)+ " "+holder.distance.getContext().getString(R.string.from_you));
+        holder.distance.setText(Math.round(distance/1000 )+" "+holder.distance.getContext().getString(R.string.km));
         }
         else {holder.distance.setVisibility(View.GONE);}
         holder.duration.setText("("+FormatUtils.formatDecimal(mDataset[position].dates[0].hours)+" "+
@@ -99,12 +99,12 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.ViewHolder> {
                             holder.servicesLayout.removeAllViewsInLayout();
                             for (int i = 0; i < mDataset[position].services.length; i++) {
                                 ImageView imageView = new ImageView (holder.servicesLayout.getContext());
-                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(54, 54);
-                                layoutParams.setMargins(6, 6, 6, 6);
+                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(58, 58);
+
+                                imageView.setImageResource(ServiceType.fromValue(mDataset[position].services[i].name).getDrawableResId());
+                                layoutParams.setMargins(8, 8, 8, 8);
 
                                 imageView.setLayoutParams(layoutParams);
-                                imageView.setImageResource(ServiceType.fromValue(mDataset[position].services[i].name).getDrawableResId());
-
                                 holder.servicesLayout.addView(imageView);
                             }
 
