@@ -31,4 +31,7 @@
     <string name="notification_new_order">Neuer Auftrag</string>
     <string name="order_not_available">Leider ist dieser Auftrag nicht mehr verfügbar</string>
     <string name="continue_searching">Weiter suchen</string>
+    <string name="tutorial_list">Anklicken für Vorschauf. Entfertnung zum Kunde in einer Zahl im grünen Kreis </string>
+    <string name="tutorial_calendar">Alle berits bestätigte Auftäge in Ihrem Kalender</string>
+    <string name="tutorial_map">Andere verfügbare Aufträge in der Nähe</string>
 </resources>
