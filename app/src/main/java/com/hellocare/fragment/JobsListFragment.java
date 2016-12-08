@@ -30,6 +30,8 @@ import com.hellocare.network.ApiFacade;
 import com.hellocare.util.ResourceUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -63,7 +65,6 @@ public class JobsListFragment extends Fragment {
 
         if (isVisibleToUser){
             Log.d("MyFragment "+getArguments().getString(EXTRA_TYPE), "Fragment is visible.");
-        Log.d("==Ela==",getArguments().getString(EXTRA_TYPE));
         StatusType type = StatusType.fromValue(getArguments().getString(EXTRA_TYPE));
         fetchJobs(type);}
 
@@ -89,7 +90,6 @@ public class JobsListFragment extends Fragment {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this.getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this.getActivity()));
-        Log.d("==Ela==",getArguments().getString(EXTRA_TYPE));
         StatusType type = StatusType.fromValue(getArguments().getString(EXTRA_TYPE));
         fetchJobs(type);
         return rootView;
@@ -98,15 +98,24 @@ public class JobsListFragment extends Fragment {
     private void fetchJobs(StatusType statusType) {
 
         ApiFacade.getInstance().getApiService().
-                getAllJobs(statusType).enqueue(new Callback<Job[]>() {
+                getAllJobs(statusType).enqueue(new Callback<List<Job>>() {
             @Override
-            public void onResponse(Call<Job[]> call, Response<Job[]> response) {
-                mAdapter = new JobsAdapter(response.body());
+            public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
+                //Handling expired  dates in jobs from Client side
+               List<Job> job = new ArrayList<Job>();
+                for (int i = 0; i < response.body().size(); i++){
+                    if (response.body().get(i).getNearestJob() != null){
+                        job.add(response.body().get(i));
+                    }
+                }
+                Collections.sort(job);
+                mAdapter = new JobsAdapter(job);
+               // mAdapter = new JobsAdapter(response.body());
                 mRecyclerView.setAdapter(mAdapter);
             }
 
             @Override
-            public void onFailure(Call<Job[]> call, Throwable t) {
+            public void onFailure(Call<List<Job>> call, Throwable t) {
 
             }
         });

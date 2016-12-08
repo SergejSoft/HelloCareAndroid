@@ -22,6 +22,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.text.Html;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -70,8 +71,10 @@ import com.hellocare.util.ResourceUtil;
 
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -164,10 +167,10 @@ public class MapFragment extends Fragment {
                 googleMap.setMyLocationEnabled(true);
 
                 ApiFacade.getInstance().getApiService().
-                        getAllJobs(StatusType.DEFAULT).enqueue(new Callback<Job[]>() {
+                        getAllJobs(StatusType.ASSIGNED).enqueue(new Callback<List<Job>>() {
                     @Override
-                    public void onResponse(Call<Job[]> call, Response<Job[]> response) {
-                        if (response.body().length == 0) {
+                    public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
+                        if (response.body().size() == 0) {
                             return;
                         }
                         ArrayList<Marker> markers = new ArrayList<Marker>();
@@ -179,7 +182,8 @@ public class MapFragment extends Fragment {
                                             getBitmap(
                                                     MapFragment.this.getActivity(),
                                                     issue.confirmation ?
-                                                            R.drawable.map_pin_accepted : R.drawable.map_pin_assigned))));
+                                                            R.drawable.map_pin_accepted
+                                                            : R.drawable.map_pin_assigned))));
                             ;
                             marker.setTag(issue);
                             markers.add(marker);
@@ -226,7 +230,7 @@ public class MapFragment extends Fragment {
                                 TextView client = (TextView) info.findViewById(R.id.client);
                                 LinearLayout servicesLayout = (LinearLayout) info.findViewById(R.id.services_layout);
                                 String dateAdress = "<b>" + FormatUtils.timestampToProperString(getContext(),
-                                        job.dates[0].starts_at) + "</b>" + " " +
+                                        job.dates.get(0).starts_at) + "</b>" + " " +
                                         (job.confirmation ? job.location.full_address : job.location.secret_address);
                                 dateAndAddress.setText(Html.fromHtml(dateAdress));
                                 if (SettingManager.getInstance().getCurrentLocation() != null) {
@@ -240,7 +244,8 @@ public class MapFragment extends Fragment {
                                 } else {
                                     distance.setVisibility(View.GONE);
                                 }
-                                duration.setText("(" + FormatUtils.formatDecimal(job.dates[0].hours) + " " +
+
+                                duration.setText("(" + FormatUtils.formatDecimal(job.dates.get(0).hours) + " " +
                                         getContext().getString(R.string.hours) + ")");
                                 price.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(getContext(),
                                         PaymentType.fromValue(job.payment_method).getDrawableResId()), null, null, null);
@@ -255,11 +260,13 @@ public class MapFragment extends Fragment {
                                 servicesLayout.removeAllViewsInLayout();
                                 for (int i = 0; i < job.services.length; i++) {
                                     ImageView imageView = new ImageView(servicesLayout.getContext());
-                                    LinearLayout.LayoutParams imageLayoutParams = new LinearLayout.LayoutParams(54, 54);
+                                    LinearLayout.LayoutParams imageLayoutParams =
+                                            new LinearLayout.LayoutParams(54, 54);
                                     layoutParams.setMargins(6, 6, 6, 6);
 
                                     imageView.setLayoutParams(imageLayoutParams);
-                                    imageView.setImageResource(ServiceType.fromValue(job.services[i].name).getDrawableResId());
+                                    imageView.setImageResource
+                                            (ServiceType.fromValue(job.services[i].name).getDrawableResId());
 
                                     servicesLayout.addView(imageView);
                                 }
@@ -271,7 +278,7 @@ public class MapFragment extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(Call<Job[]> call, Throwable t) {
+                    public void onFailure(Call<List<Job>> call, Throwable t) {
 
                     }
                 });

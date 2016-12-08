@@ -8,6 +8,7 @@ import com.hellocare.R;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Currency;
 import java.util.Date;
 import java.util.Locale;
@@ -33,6 +34,19 @@ public  static String PATTERN_DATE_TIME = "yyyy-MM-dd HH:mm:ss";
             e.printStackTrace();
         }
         return output.format(d);
+    }
+    public static Date convertDateTimeToDate(DateTime dateTime) {
+        int year = dateTime.getYear();
+        int datetimeMonth = dateTime.getMonth();
+        int day = dateTime.getDay();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+
+        // datetimeMonth start at 1. Need to minus 1 to get javaMonth
+        calendar.set(year, datetimeMonth - 1, day);
+
+        return calendar.getTime();
     }
     public static String timestampToProperString(Context c, String currentTimestamp){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");

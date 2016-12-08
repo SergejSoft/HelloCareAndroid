@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +17,15 @@ import com.hellocare.model.Job;
 import com.hellocare.model.JobDate;
 import com.hellocare.model.StatusType;
 import com.hellocare.network.ApiFacade;
+import com.hellocare.util.FormatUtils;
 import com.roomorama.caldroid.CaldroidListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,6 +94,7 @@ public class CalendarFragment extends Fragment {
 caldroidFragment.setSelectedDate(date);
 
                 caldroidFragment.refreshView();
+                Log.d("==Ela==",view.getTag().toString());
                // view.setBackground(green);
 
             }
@@ -119,22 +124,37 @@ caldroidFragment.setSelectedDate(date);
        extraData = new HashMap<String, Object>();
        // extraData.put()
         ApiFacade.getInstance().getApiService().
-                getAllJobs(StatusType.ACCEPTED).enqueue(new Callback<Job[]>() {
+                getAllJobs(StatusType.ACCEPTED).enqueue(new Callback<List<Job>>() {
             @Override
-            public void onResponse(Call<Job[]> call, Response<Job[]> response) {
-                extraData.put("key",response.body()[0].dates[0].starts_at);
+            public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
+                HashMap<String, ArrayList<Job>> calendarKeys = new  HashMap<String, ArrayList<Job>>();
+                for (int i = 0;i<response.body().size();i++){
+                    for (int j = 0;j<response.body().get(i).dates.size();j++){
+                    String key = FormatUtils.convertTimestamp(response.body().get(i).dates.get(j).starts_at,FormatUtils.PATTERN_DATE);
+
+                        if (calendarKeys.containsKey(key)){calendarKeys.get(key).add(response.body().get(i));}
+                        else {ArrayList<Job> jobs = new ArrayList<Job>();
+                        jobs.add(response.body().get(i));
+                            calendarKeys.put(key, jobs);
+                        }
+                    }
+                ;
+                }
+
+                extraData.put("extra",calendarKeys);
+                caldroidFragment.setExtraData(extraData);
+//setCustomResourceForDates();
+                FragmentTransaction t = getChildFragmentManager().beginTransaction();
+                t.replace(R.id.calendar_container, caldroidFragment);
+                t.commit();
             }
 
             @Override
-            public void onFailure(Call<Job[]> call, Throwable t) {
+            public void onFailure(Call<List<Job>> call, Throwable t) {
 
             }
         });
-        caldroidFragment.setExtraData(extraData);
-//setCustomResourceForDates();
-        FragmentTransaction t = getChildFragmentManager().beginTransaction();
-        t.replace(R.id.calendar_container, caldroidFragment);
-        t.commit();
+
 
         return rootView;
     }

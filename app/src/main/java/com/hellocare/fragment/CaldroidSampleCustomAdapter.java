@@ -15,15 +15,19 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hellocare.R;
+import com.hellocare.model.Job;
 import com.hellocare.model.JobDate;
 import com.hellocare.model.ServiceType;
+import com.hellocare.util.FormatUtils;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidGridAdapter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import hirondelle.date4j.DateTime;
@@ -49,19 +53,7 @@ public class CaldroidSampleCustomAdapter extends CaldroidGridAdapter {
         //return fmt.format(date1).equals(fmt.format(date2));
     }
 
-    public static Date convertDateTimeToDate(DateTime dateTime) {
-        int year = dateTime.getYear();
-        int datetimeMonth = dateTime.getMonth();
-        int day = dateTime.getDay();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.clear();
-
-        // datetimeMonth start at 1. Need to minus 1 to get javaMonth
-        calendar.set(year, datetimeMonth - 1, day);
-
-        return calendar.getTime();
-    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -143,16 +135,19 @@ public class CaldroidSampleCustomAdapter extends CaldroidGridAdapter {
         tv1.setText("" + dateTime.getDay());
 
         //JobDate datejob = (JobDate) extraData.get("key");
-        String datejob = "2016-12-10T10:30:00+01:00";
-        //tv2.setText("N");
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+       // String datejob = "2016-12-10T10:30:00+01:00";
+        HashMap<String, ArrayList<Job>> calendarKeys = (HashMap<String, ArrayList<Job>>) extraData.get("extra");
+                SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+
         try {
-            Date date = sdf.parse(datejob);
+            for (String dateDay:calendarKeys.keySet()){
+            Date date = sdf.parse(dateDay);
 
-            if (isSameDay(date, convertDateTimeToDate(dateTime))) {
+            if (isSameDay(date, FormatUtils.convertDateTimeToDate(dateTime))) {
 
-                drawJobsCount(jobsCount, 3, R.drawable.circle);
-            }
+               drawJobsCount(jobsCount, calendarKeys.get(dateDay).size(), R.drawable.circle);
+                cellView.setTag(calendarKeys.get(dateDay));
+            }}
 
         } catch (ParseException e) {
             e.printStackTrace();

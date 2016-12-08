@@ -88,7 +88,7 @@ public class ApiFacade {
                                 Request.Builder requestBuilder = original.newBuilder()
 
                                         .addHeader("X-Auth-Type", tokenType)
-                                        .addHeader("X-Auth-Token", temporaryToken);
+                                        .addHeader("X-Auth-Token",temporaryToken);
 
                                 request = requestBuilder.build();
                             }

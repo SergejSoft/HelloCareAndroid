@@ -3,7 +3,7 @@ package com.hellocare.model;
 
 public enum StatusType {
     //types of communication object
-    DEFAULT("new"),
+    DEFAULT("available"),
     ACCEPTED("accepted"),
     ASSIGNED("assigned");
     private final String type;

@@ -1,10 +1,18 @@
 package com.hellocare.model;
 
+import android.util.Log;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
-public class Job implements Serializable {
+public class Job implements Serializable, Comparable<Job> {
     @SerializedName("id")
     public int id;
     @SerializedName("created_at")
@@ -32,10 +40,33 @@ public class Job implements Serializable {
     @SerializedName("client")
     public Client client;
     @SerializedName("dates")
-    public JobDate[] dates;
+    public List<JobDate> dates;
     @SerializedName("location")
     public JobLocation location;
     @SerializedName("patients")
     public Patient[] patients;
+
+    public JobDate getNearestJob(){
+        Collections.sort(dates);
+        Log.d("==Ela==", dates.toString());
+        for (JobDate jobDate :dates){
+            try {
+
+
+             if   (!new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(jobDate.starts_at).before(new Date())){
+                 return  jobDate;
+             } ;
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+        return  null;
+    };
+
+    @Override
+    public int compareTo(Job job) {
+        return getNearestJob().compareTo(job.getNearestJob());
+    }
 
 }

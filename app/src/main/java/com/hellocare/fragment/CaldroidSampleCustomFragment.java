@@ -9,7 +9,7 @@ public class CaldroidSampleCustomFragment extends CaldroidFragment {
 	public CaldroidGridAdapter getNewDatesGridAdapter(int month, int year) {
 
 		return new CaldroidSampleCustomAdapter(getActivity(), month, year,
-				getCaldroidData(), extraData);
+				getCaldroidData(), getExtraData());
 	}
 
 }

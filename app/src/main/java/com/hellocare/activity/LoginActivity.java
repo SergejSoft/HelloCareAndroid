@@ -16,6 +16,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hellocare.MainActivity;
 import com.hellocare.R;
 import com.hellocare.SettingManager;
@@ -59,7 +60,10 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 SettingManager.getInstance().createTempTokenFromLoginPassword(email.getText().toString(), pass.getText().toString());
-                SettingManager.getInstance().saveValue(SettingManager.TOKEN_TYPE, SettingManager.TOKEN_TYPE_HELLOCARE);
+                SettingManager.getInstance().saveValue(SettingManager.TOKEN_TYPE,
+                        SettingManager.TOKEN_TYPE_HELLOCARE);
+
+
                 signIn();
             }
         });
@@ -99,6 +103,7 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, response.code() + "");
                 if (response.code() == 201) {
                     SettingManager.getInstance().saveValue(SettingManager.TOKEN, response.body().authentication_token);
+                    FirebaseMessaging.getInstance().subscribeToTopic(response.body().location+"-jobs");
                     Intent goToMainActivity = new Intent(LoginActivity.this, MainActivity.class);
                     goToMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(goToMainActivity);

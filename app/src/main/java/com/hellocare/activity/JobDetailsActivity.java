@@ -30,6 +30,7 @@ import com.hellocare.network.ApiFacade;
 import com.hellocare.util.FormatUtils;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -167,10 +168,11 @@ intent.putExtra(Statics.CURRENT_TAB, 2);
 
     }
 
-    private void acceptJob(int id) {
+    private void acceptJob(final int id) {
         ApiFacade.getInstance().getApiService().acceptJob(id).enqueue(new Callback<Object>() {
             @Override
             public void onResponse(Call<Object> call, Response<Object> response) {
+                if (response.code()==200){fetchJobDetails(id);}
 
             }
 
@@ -197,10 +199,10 @@ intent.putExtra(Statics.CURRENT_TAB, 2);
 
     private void populateJob(Job job) {
 
-        dateStart.setText(FormatUtils.convertTimestamp(job.dates[0].starts_at,FormatUtils.PATTERN_DATE) );
-        timeStart.setText(FormatUtils.convertTimestamp(job.dates[0].starts_at,FormatUtils.PATTERN_TIME) );
-        dateFinish.setText(FormatUtils.convertTimestamp(job.dates[0].ends_at,FormatUtils.PATTERN_DATE) );
-        timeFinish.setText(FormatUtils.convertTimestamp(job.dates[0].ends_at,FormatUtils.PATTERN_TIME) );
+        dateStart.setText(FormatUtils.convertTimestamp(job.getNearestJob().starts_at,FormatUtils.PATTERN_DATE) );
+        timeStart.setText(FormatUtils.convertTimestamp(job.getNearestJob().starts_at,FormatUtils.PATTERN_TIME) );
+        dateFinish.setText(FormatUtils.convertTimestamp(job.getNearestJob().ends_at,FormatUtils.PATTERN_DATE) );
+        timeFinish.setText(FormatUtils.convertTimestamp(job.getNearestJob().ends_at,FormatUtils.PATTERN_TIME) );
 
 
         phone.setText(job.client.phone);
@@ -210,9 +212,9 @@ intent.putExtra(Statics.CURRENT_TAB, 2);
 
         fullAddress.setText(job.confirmation?job.location.full_address:job.location.secret_address);
 
-
+        Collections.sort( job.dates);
         String dateAdress = "<b>" + FormatUtils.timestampToProperString(this,
-                job.dates[0].starts_at) + "</b>" +" "+
+                job.getNearestJob().starts_at) + "</b>" +" "+
                 (job.confirmation? job.location.full_address: job.location.secret_address) ;
         dateAndAddress.setText(Html.fromHtml(dateAdress));
         if (SettingManager.getInstance().getCurrentLocation()!=null){
@@ -226,7 +228,7 @@ intent.putExtra(Statics.CURRENT_TAB, 2);
                     " "+getString(R.string.from_you));
         }
         else {distance.setVisibility(View.GONE);}
-        duration.setText(FormatUtils.formatDecimal(job.dates[0].hours)+" "+
+        duration.setText(FormatUtils.formatDecimal(job.getNearestJob().hours)+" "+
                getString(R.string.hours));
         price.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(this,
                 PaymentType.fromValue(job.payment_method).getDrawableResId()), null,null,null);

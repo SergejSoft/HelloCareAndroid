@@ -5,6 +5,8 @@ import com.hellocare.model.Job;
 import com.hellocare.model.StatusType;
 import com.hellocare.model.AuthResult;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
@@ -26,7 +28,7 @@ public interface ApiEndpointInterface {
 
     //Operations about jobs
     @GET(ALL_JOBS_URL)
-    Call<Job[]> getAllJobs(@Query("status") StatusType status);
+    Call<List<Job>> getAllJobs(@Query("status") StatusType status);
 
     @GET(JOBS_BY_ID_URL)
     Call<Job> getJobById(@Path("id") int id);

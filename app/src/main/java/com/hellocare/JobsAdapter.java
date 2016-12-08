@@ -1,6 +1,9 @@
 package com.hellocare;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -12,18 +15,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.hellocare.activity.JobDetailsActivity;
 import com.hellocare.activity.Statics;
+import com.hellocare.fragment.MapFragment;
 import com.hellocare.model.Job;
 import com.hellocare.model.PaymentType;
 import com.hellocare.model.ServiceType;
 import com.hellocare.util.FormatUtils;
+import com.hellocare.util.ResourceUtil;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 
 public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.ViewHolder> {
-    private final Job[] mDataset;
+    private final List<Job> mDataset;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -47,7 +55,7 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.ViewHolder> {
 
     }
 
-    public JobsAdapter(Job[] myDataset) {
+    public JobsAdapter(List<Job> myDataset) {
         mDataset = myDataset;
     }
 
@@ -66,45 +74,57 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.ViewHolder> {
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
+        Collections.sort( mDataset.get(position).dates);
         String dateAdress = "<b>" + FormatUtils.timestampToProperString(holder.client.getContext(),
-                mDataset[position].dates[0].starts_at) + "</b>" +" "+
-                (mDataset[position].confirmation? mDataset[position].location.full_address: mDataset[position].location.secret_address) ;
+                mDataset.get(position).getNearestJob().starts_at) + "</b>" +" "+
+                (mDataset.get(position).confirmation? mDataset.get(position).location.full_address:
+                        mDataset.get(position).location.secret_address) ;
         holder.dateAndAddress.setText(Html.fromHtml(dateAdress));
         if (SettingManager.getInstance().getCurrentLocation()!=null){
             Location location = new Location("jobLocation");
 
-            location.setLatitude(mDataset[position].location.lat);
-            location.setLongitude(mDataset[position].location.lng);
+            location.setLatitude(mDataset.get(position).location.lat);
+            location.setLongitude(mDataset.get(position).location.lng);
 
             float distance = SettingManager.getInstance().getCurrentLocation().distanceTo(location);
         holder.distance.setText(Math.round(distance/1000 )+" "+holder.distance.getContext().getString(R.string.km));
         }
         else {holder.distance.setVisibility(View.GONE);}
-        holder.duration.setText("("+FormatUtils.formatDecimal(mDataset[position].dates[0].hours)+" "+
+        holder.duration.setText("("+FormatUtils.formatDecimal(mDataset.get(position).dates.get(0).hours)+" "+
                 holder.duration.getContext().getString(R.string.hours)+")");
         holder.price.setCompoundDrawablesWithIntrinsicBounds(ContextCompat.getDrawable(holder.price.getContext(),
-                PaymentType.fromValue(mDataset[position].payment_method).getDrawableResId()), null,null,null);
-        String priceString = "<b>" + FormatUtils.formatCurrency(mDataset[position].amount, mDataset[position].currency)+", " +
-                "</b>"+FormatUtils.formatCurrency(mDataset[position].hourly_rate,
-                mDataset[position].currency)+"/"+holder.client.getContext().getString(R.string.hour)
+                PaymentType.fromValue(mDataset.get(position).payment_method).getDrawableResId()), null,null,null);
+        String priceString = "<b>" + FormatUtils.formatCurrency(mDataset.get(position).amount,
+                mDataset.get(position).currency)+", " +
+                "</b>"+FormatUtils.formatCurrency(mDataset.get(position).hourly_rate,
+                mDataset.get(position).currency)+"/"+holder.client.getContext().getString(R.string.hour)
 
               ;
         holder.price.setText(Html.fromHtml(priceString));
         String clientString = "<b>" +  holder.client.getContext().getString(R.string.client) + ": "+"</b>" +
-                Arrays.toString(mDataset[position].patients).replace("[","").replace("]","");
+                Arrays.toString(mDataset.get(position).patients).replace("[","").replace("]","");
         holder.client.setText(Html.fromHtml(clientString));
 
-        holder.client.setVisibility(mDataset[position].confirmation?View.VISIBLE:View.GONE);
+        holder.client.setVisibility(mDataset.get(position).confirmation?View.VISIBLE:View.GONE);
 
                             holder.servicesLayout.removeAllViewsInLayout();
-                            for (int i = 0; i < mDataset[position].services.length; i++) {
+                            for (int i = 0; i <mDataset.get(position).services.length; i++) {
                                 ImageView imageView = new ImageView (holder.servicesLayout.getContext());
-                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(58, 58);
+                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(60
+                                        , 60);
+imageView.setAdjustViewBounds(true);
 
-                                imageView.setImageResource(ServiceType.fromValue(mDataset[position].services[i].name).getDrawableResId());
-                                layoutParams.setMargins(8, 8, 8, 8);
+                               // layoutParams.setMargins(8, 8, 8, 8);
 
                                 imageView.setLayoutParams(layoutParams);
+                                Bitmap bitmap = ResourceUtil.
+                                        getBitmap(
+                                                imageView.getContext(),
+                                                ServiceType.fromValue(mDataset.get(position).services[i].name).getDrawableResId());
+//Convert bitmap to drawabl
+                                Drawable drawable = new BitmapDrawable( bitmap);
+                                imageView.setImageDrawable(drawable);
+
                                 holder.servicesLayout.addView(imageView);
                             }
 
@@ -112,40 +132,11 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.ViewHolder> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), JobDetailsActivity.class);
-                intent.putExtra(Statics.EXTRA_ID, mDataset[position].id);
-                intent.putExtra(Statics.EXTRA_JOB, mDataset[position]);
+                intent.putExtra(Statics.EXTRA_ID, mDataset.get(position).id);
+                intent.putExtra(Statics.EXTRA_JOB, mDataset.get(position));
                 v.getContext().startActivity(intent);
             }
         });
-
-        /*: [{"id":2,"created_at":"2016-11-17T12:52:39+01:00",
-        "amount":"228.0","currency":"EUR","hourly_rate":"28.5",
-        "duration":8.0,"payment_method":"cash","status":"new",
-        "confirmation":false,"flexible":false,"description":"",
-        "services":[{"name":"cooking"},{"name":"shopping"},{"name":"support"}],
-        "client":{"first_name":"Maite","last_name":"Lancaster","phone":"+632-21-1460277",
-        "email":"iamdeadgeist+1@gmail.com"},
-
-        "dates":[
-        {"starts_at":"2016-12-10T10:30:00+01:00","ends_at":"2016-12-10T12:30:00+01:00","hours":2.0},
-        {"starts_at":"2016-12-08T12:30:00+01:00", "ends_at":"2016-12-08T14:30:00+01:00","hours":2.0},
-        {"starts_at":"2016-12-08T09:00:00+01:00","ends_at":"2016-12-08T11:00:00+01:00","hours":2.0},
-        {"starts_at":"2016-12-07T07:30:00+01:00","ends_at":"2016-12-07T09:30:00+01:00","hours":2.0}]
-
-        ,"location":{"full_address":"Odentaler 13 Köln 51069  DE","secret_address":"Köln 51069","zipcode":51069,"lat":51.0011483,"lng":7.0425768},"patients":[{"first_name":"Geist","last_name":"Wargeist","gender":"male","age":50}]},{"id":2,"created_at":"2016-11-17T12:52:39+01:00","amount":"228.0","currency":"EUR","hourly_rate":"28.5","duration":8.0,"payment_method":"cash","status":"new","confirmation":false,"flexible":false,"description":"","services":[{"name":"cooking"},{"name":"shopping"},{"name":"support"}],"client":{"first_name":"Maite","last_name":"Lancaster","phone":"+632-21-1460277","email":"iamdeadgeist+1@gmail.com"},"dates":[{"starts_at":"2016-12-10T10:30:00+01:00","ends_at":"2016-12-10T12:30:00+01:00","hours":2.0},{"starts_at":"2016-12-08T12:30:00+01:00","ends_at":"2016-12-08T14:30:00+01:00","hours":2.0},{"starts_at":"2016-12-08T09:00:00+01:00","ends_at":"2016-12-08T11:00:00+01:00","hours":2.0},{"starts_at":"2016-12-07T07:30:00+01:00","ends_at":"2016-12-07T09:30:00+01:00","hours":2.0}],"location":{"full_address":"Odentaler 13 Köln 51069  DE","secret_address":"Köln 51069","zipcode":51069,"lat":51.0011483,"lng":7.0425768},"patients":[{"first_name":"Geist","last_name":"Wargeist","gender":"male","age":50}]},{"id":2,"created_at":"2016-11-17T12:52:39+01:00","amount":"228.0","currency":"EUR","hourly_rate":"28.5","duration":8.0,"payment_method":"cash","status":"new","confirmation":false,"flexible":false,"description":"","services":[{"name":"cooking"},{"name":"shopping"},{"name":"support"}],"client":{"first_name":"Maite","last_name":"Lancaster","phone":"+632-21-1460277","email":"iamdeadgeist+1@gmail.com"},"dates":[{"starts_at":"2016-12-10T10:30:00+01:00","ends_at":"2016-12-10T12:30:00+01:00","hours":2.0},{"starts_at":"2016-12-08T12:30:00+01:00","ends_at":"2016-12-08T14:30:00+01:00","hours":2.0},{"starts_at":"2016-12-08T09:00:00+01:00","ends_at":"2016-12-08T11:00:00+01:00","hours":2.0},{"starts_at":"2016-12-07T07:30:00+01:00","ends_at":"2016-12-07T09:30:00+01:00","hours":2.0}],"location":{"full_address":"Odentaler 13 Köln 51069  DE","secret_address":"Köln 51069","zipcode":51069,"lat":51.0011483,"lng":7.0425768},"patients":[{"first_name":"Geist","last_name":"Wargeist","gender":"male","age":50}]},{"id":2,"created_at":"2016-11-17T12:52:39+01:00","amount":"228.0","currency":"EUR","hourly_rate":"28.5","duration":8.0,"payment_method":"cash","status":"new","confirmation":false,"flexible":false,"description":"","services":[{"name":"cooking"},{"name":"shopping"},{"name":"support"}],"client":{"first_name":"Maite","last_name":"Lancaster","phone":"+632-21-1460277","email":"iamdeadgeist+1@gmail.com"},"dates":[{"starts_at":"2016-12-10T10:30:00+01:00","ends_at":"2016-12-10T12:30:00+01:00","hours":2.0},{"starts_at":"2016-12-08T12:30:00+01:00","ends_at":"2016-12-08T14:30:00+01:00","hours":2.0},{"starts_at":"2016-12-08T09:00:00+01:00","ends_at":"2016-12-08T11:00:00+01:00","hours":2.0},{"starts_at":"2016-12-07T07:30:00+01:00","ends_at":"2016-12-07T09:30:00+01:00","hours":2.0}],"location":{"full_address":"Odentaler 13 Köln 51069  DE","secret_address":"Köln 51069","zipcode":51069,"lat":51.0011483,"lng":7.0425768},"patients":[{"first_name":"Geist","last_name":"Wargeist","gender":"male","age":5
-11-29 18:08:37.776 19168-11907/com.hellocare D/OkHttp: 0}]},
-
-{"id":3,"created_at":"2016-11-21T13:58:11+01:00",
-"amount":"114.0",
-"currency":"EUR","hourly_rate":"28.5","duration":4.0,"payment_method":"cash","status":"new","confirmation":true,"flexible":true,
-"description":"","services":[{"name":"cooking"},{"name":"shopping"},{"name":"support"}],
-"client":{"first_name":"Maite","last_name":"Lancaster","phone":"+632-21-1460277","email":"iamdeadgeist+1@gmail.com"},
-
-"dates":[{"starts_at":"2016-12-02T12:30:00+01:00","ends_at":"2016-12-02T14:30:00+01:00","hours":2.0},
-{"starts_at":"2016-11-30T09:00:00+01:00","ends_at":"2016-11-30T11:00:00+01:00","hours":2.0}]
-
-,"location":{"full_address":"Odentaler 13 Köln 51069  DE","secret_address":"Köln 51069","zipcode":51069,"lat":51.0011483,"lng":7.0425768},"patients":[{"first_name":"Geist","last_name":"Wargeist","gender":"male","age":50}]},{"id":3,"created_at":"2016-11-21T13:58:11+01:00","amount":"114.0","currency":"EUR","hourly_rate":"28.5","duration":4.0,"payment_method":"cash","status":"new","confirmation":true,"flexible":true,"description":"","services":[{"name":"cooking"},{"name":"shopping"},{"name":"support"}],"client":{"first_name":"Maite","last_name":"Lancaster","phone":"+632-21-1460277","email":"iamdeadgeist+1@gmail.com"},"dates":[{"starts_at":"2016-12-02T12:30:00+01:00","ends_at":"2016-12-02T14:30:00+01:00","hours":2.0},{"starts_at":"2016-11-30T09:00:00+01:00","ends_at":"2016-11-30T11:00:00+01:00","hours":2.0}],"location":{"full_address":"Odentaler 13 Köln 51069  DE","secret_address":"Köln 51069","zipcode":51069,"lat":51.0011483,"lng":7.0425768},"patients":[{"first_name":"Geist","last_name":"Wargeist","gender":"male","age":50}]}]
-11-29 18:08:37.776 19168-11907/com.hellocare D/OkHttp: <-- END HTTP*/
 
     }
 
@@ -153,12 +144,12 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.ViewHolder> {
     // Return the size of dataset
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
     }
 
 
     public Job getItemAtPosition(int pos) {
-        return mDataset[pos];
+        return mDataset.get(pos);
     }
 
 
