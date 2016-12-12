@@ -35,6 +35,6 @@
     <string name="tutorial_calendar">Alle berits bestätigte Auftäge in Ihrem Kalender</string>
     <string name="tutorial_map">Andere verfügbare Aufträge in der Nähe</string>
     <string name="no_available_orders">Keine verfügbaren Aufträge</string>
-    <string name="confirming">Ich stimme den AGB zu.</string>
+    <string name="confirming">Ich stimme den AGB zu</string>
     <string name="login_by_email">Per E-Mail anmelden</string>
 </resources>
