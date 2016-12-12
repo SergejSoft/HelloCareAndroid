@@ -8,6 +8,8 @@ import com.hellocare.model.AuthResult;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -16,12 +18,12 @@ import retrofit2.http.Query;
 
 public interface ApiEndpointInterface {
 
-    static final String AUTHORIZATION_URL = "/api/auth/authorize";
-    static final String ALL_JOBS_URL = "/api/jobs";
-    static final String JOBS_BY_ID_URL = "api/jobs/{id}";
-    static final String ACCEPT_JOB_URL = "api/jobs/{id}/accept";
-    static final String DECLINE_JOB_URL = "api/jobs/{id}/decline";
-
+    String AUTHORIZATION_URL = "/api/auth/authorize";
+    String ALL_JOBS_URL = "/api/jobs";
+    String JOBS_BY_ID_URL = "api/jobs/{id}";
+    String ACCEPT_JOB_URL = "api/jobs/{id}/accept";
+    String DECLINE_JOB_URL = "api/jobs/{id}/decline";
+    String DEVICES_URL = "/api/devices";
     //authorization
     @POST(AUTHORIZATION_URL)
     Call<AuthResult> loginUser();
@@ -38,4 +40,7 @@ public interface ApiEndpointInterface {
 
     @PUT(DECLINE_JOB_URL)
     Call<Object> declineJob(@Path("id") int id);
+    @FormUrlEncoded
+    @POST(DEVICES_URL)
+    Call<Object> registerDevice(@Field("uuid") String token);
 }

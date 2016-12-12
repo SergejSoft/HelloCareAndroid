@@ -7,12 +7,12 @@ import com.hellocare.R;
 public  enum ServiceType {
 
     DEFAULT("Default",  R.drawable.buy),
-    COOKING("cooking",  R.drawable.prepare),
-    SHOPPING("shopping", R.drawable.buy),
-    CLEANING("cleaning",  R.drawable.cleaning),
-    SUPPORT("support",  R.drawable.spot),
-    CARE("care",  R.drawable.heart),
-    ACCOMPANIMENT("accompaniment",  R.drawable.mask);
+    COOKING("cooking",  R.drawable.cook),
+    SHOPPING("shopping", R.drawable.shopping),
+    CLEANING("cleaning",  R.drawable.clean),
+    SUPPORT("support",  R.drawable.support),
+    CARE("care",  R.drawable.care),
+    ACCOMPANIMENT("accompaniment",  R.drawable.accomp);
     public final String type;
 
     /**
@@ -25,7 +25,7 @@ public  enum ServiceType {
 
     private final int drawableResId;
 
-    private ServiceType(String type, int resId) {
+    ServiceType(String type, int resId) {
         this.type = type;
 
         this.drawableResId = resId;

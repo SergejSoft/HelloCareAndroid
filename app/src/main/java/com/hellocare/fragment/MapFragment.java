@@ -98,7 +98,7 @@ public class MapFragment extends Fragment {
 
     protected void search(List<Address> addresses) {
 
-        Address address = (Address) addresses.get(0);
+        Address address = addresses.get(0);
         home_long = address.getLongitude();
         home_lat = address.getLatitude();
         latLng = new LatLng(address.getLatitude(), address.getLongitude());
@@ -130,7 +130,7 @@ public class MapFragment extends Fragment {
                         search(addresses);
 
                 } catch (Exception e) {
-
+e.printStackTrace();
                 }
                 return false;
             }
@@ -167,9 +167,13 @@ public class MapFragment extends Fragment {
                 googleMap.setMyLocationEnabled(true);
 
                 ApiFacade.getInstance().getApiService().
-                        getAllJobs(StatusType.ASSIGNED).enqueue(new Callback<List<Job>>() {
+                        getAllJobs(StatusType.AVAILABLE).enqueue(new Callback<List<Job>>() {
                     @Override
                     public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
+                        if (response.code()!=200){
+
+                            return;
+                        }
                         if (response.body().size() == 0) {
                             return;
                         }
@@ -184,7 +188,6 @@ public class MapFragment extends Fragment {
                                                     issue.confirmation ?
                                                             R.drawable.map_pin_accepted
                                                             : R.drawable.map_pin_assigned))));
-                            ;
                             marker.setTag(issue);
                             markers.add(marker);
 
@@ -240,7 +243,7 @@ public class MapFragment extends Fragment {
                                     location.setLongitude(job.location.lng);
 
                                     float dist = SettingManager.getInstance().getCurrentLocation().distanceTo(location);
-                                    distance.setText(Math.round(dist / 1000) + " " + getContext().getString(R.string.km));
+                                    distance.setText(Math.round(dist / 1000)+"");
                                 } else {
                                     distance.setVisibility(View.GONE);
                                 }
@@ -260,9 +263,10 @@ public class MapFragment extends Fragment {
                                 servicesLayout.removeAllViewsInLayout();
                                 for (int i = 0; i < job.services.length; i++) {
                                     ImageView imageView = new ImageView(servicesLayout.getContext());
-                                    LinearLayout.LayoutParams imageLayoutParams =
-                                            new LinearLayout.LayoutParams(54, 54);
-                                    layoutParams.setMargins(6, 6, 6, 6);
+                                    LinearLayout.LayoutParams imageLayoutParams = new LinearLayout.LayoutParams(60
+                                            , 60);
+                                    imageView.setAdjustViewBounds(true);
+                                    layoutParams.setMargins(8, 8, 8, 8);
 
                                     imageView.setLayoutParams(imageLayoutParams);
                                     imageView.setImageResource
@@ -304,7 +308,8 @@ public class MapFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mMapView.onDestroy();
+        if (mMapView!=null){
+        mMapView.onDestroy();}
     }
 
     @Override

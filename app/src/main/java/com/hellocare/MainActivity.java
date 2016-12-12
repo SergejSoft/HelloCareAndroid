@@ -21,8 +21,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TabHost;
-import android.widget.Toast;
 
+
+import com.facebook.login.LoginManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
 
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(JobsListFragment.newInstance(StatusType.ASSIGNED), "ONE");
+        adapter.addFragment(JobsListFragment.newInstance(StatusType.NEW), "ONE");
         adapter.addFragment(JobsListFragment.newInstance(StatusType.ACCEPTED), "TWO");
         adapter.addFragment(new MapFragment(), "THR");
         adapter.addFragment(new CalendarFragment(), "4rr");
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
         SettingManager.getInstance().setCurrentLocation(mLastLocation);
 
     }
+
     protected void onStart() {
         mGoogleApiClient.connect();
         super.onStart();
@@ -156,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
             return mFragmentTitleList.get(position);
         }
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
@@ -165,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 SettingManager.getInstance().saveValue(SettingManager.EMAIL, "");
                 SettingManager.getInstance().saveValue(SettingManager.TOKEN, "");
                 SettingManager.getInstance().saveValue(SettingManager.TEMPORARY_TOKEN, "");
+                LoginManager.getInstance().logOut();
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -177,9 +181,10 @@ public class MainActivity extends AppCompatActivity implements GoogleApiClient.C
                 return super.onOptionsItemSelected(item);
         }
     }
+
     @Override
-    public boolean onCreateOptionsMenu( Menu menu) {
-        getMenuInflater().inflate( R.menu.menu, menu);
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
 
 
         return true;

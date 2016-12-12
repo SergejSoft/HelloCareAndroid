@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "1033359201631",
+    "firebase_url": "https://hellocare-de.firebaseio.com",
+    "project_id": "hellocare-de",
+    "storage_bucket": "hellocare-de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1033359201631:android:b95bf7f71c27514a",
+        "android_client_info": {
+          "package_name": "com.hellocare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1033359201631-jklpijf2rd7p5h0r5v96diuspl7trf8a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hellocare",
+            "certificate_hash": "9BD68E076C85D041ABE1CC315D6412933DC52FD4"
+          }
+        },
+        {
+          "client_id": "1033359201631-4h82ihcnr6h0u530ot54cs3v69abb7od.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "1033359201631-l58sfuqp7do39ec5c1kvsl2gv8vervuj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACfMPEA6GMtz449I4D0pqGmDrf-lD2-vo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1033359201631-4h82ihcnr6h0u530ot54cs3v69abb7od.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

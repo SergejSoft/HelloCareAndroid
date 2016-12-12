@@ -54,17 +54,18 @@
         </TextView>
 
         <TextView
+            android:background="@drawable/ring"
             android:fontFamily="sans-serif-light"
             android:textSize="20dp"
             android:layout_alignBottom="@id/duration"
             android:id="@+id/distance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-android:gravity="center_vertical"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+android:gravity="center"
             android:textColor="@color/green"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/date_address"
-            android:text="10 km">
+            android:text="10">
         </TextView>
 
         <TextView

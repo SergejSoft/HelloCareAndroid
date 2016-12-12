@@ -6,7 +6,7 @@ import android.graphics.Color;
 
 
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hellocare.R;
-import com.hellocare.model.Job;
-import com.hellocare.model.JobDate;
-import com.hellocare.model.ServiceType;
 import com.hellocare.util.FormatUtils;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidGridAdapter;
@@ -113,7 +110,7 @@ public class CaldroidSampleCustomAdapter extends CaldroidGridAdapter {
         // Customize for selected dates
         if (selectedDates != null && selectedDates.indexOf(dateTime) != -1) {
             cellView.setBackgroundColor(resources
-                    .getColor(R.color.colorPrimaryDark));
+                    .getColor(R.color.colorAccent));
 
             tv1.setTextColor(Color.WHITE);
 
@@ -134,25 +131,30 @@ public class CaldroidSampleCustomAdapter extends CaldroidGridAdapter {
 
         tv1.setText("" + dateTime.getDay());
 
-        //JobDate datejob = (JobDate) extraData.get("key");
-       // String datejob = "2016-12-10T10:30:00+01:00";
-        HashMap<String, ArrayList<Job>> calendarKeys = (HashMap<String, ArrayList<Job>>) extraData.get("extra");
+      if(dateTime.equals(minDateTime)){}
+        HashMap<String, ArrayList<String>> calendarKeys = (HashMap<String, ArrayList<String>>) extraData.get("extra");
                 SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-
-        try {
-            for (String dateDay:calendarKeys.keySet()){
+if(calendarKeys!=null) {
+    try {
+        for (String dateDay : calendarKeys.keySet()) {
             Date date = sdf.parse(dateDay);
 
             if (isSameDay(date, FormatUtils.convertDateTimeToDate(dateTime))) {
 
-               drawJobsCount(jobsCount, calendarKeys.get(dateDay).size(), R.drawable.circle);
+                drawJobsCount(jobsCount, calendarKeys.get(dateDay).size(), selectedDates != null
+                        && selectedDates.indexOf(dateTime) != -1 ? R.drawable.circle_white : R.drawable.circle);
                 cellView.setTag(calendarKeys.get(dateDay));
-            }}
+                cellView.setBackgroundColor(ContextCompat.getColor(context,
+                        selectedDates != null && selectedDates.indexOf(dateTime) != -1 ?
+                                R.color.colorAccent : R.color.caldroid_gray));
 
-        } catch (ParseException e) {
-            e.printStackTrace();
+            }
         }
 
+    } catch (ParseException e) {
+        e.printStackTrace();
+    }
+}
         // Somehow after setBackgroundResource, the padding collapse.
         // This is to recover the padding
         cellView.setPadding(leftPadding, topPadding, rightPadding,

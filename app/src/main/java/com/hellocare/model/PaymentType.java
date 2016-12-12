@@ -22,7 +22,7 @@ public  enum PaymentType {
 
     private final int drawableResId;
 
-    private PaymentType(String type, int resId) {
+    PaymentType(String type, int resId) {
         this.type = type;
 
         this.drawableResId = resId;

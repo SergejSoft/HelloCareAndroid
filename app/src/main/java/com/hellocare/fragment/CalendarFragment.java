@@ -5,28 +5,31 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
-import com.hellocare.JobsAdapter;
+import com.hellocare.JobsTimeAdapter;
 import com.hellocare.R;
 import com.hellocare.model.Job;
-import com.hellocare.model.JobDate;
 import com.hellocare.model.StatusType;
 import com.hellocare.network.ApiFacade;
 import com.hellocare.util.FormatUtils;
 import com.roomorama.caldroid.CaldroidListener;
+import com.roomorama.caldroid.CalendarHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import hirondelle.date4j.DateTime;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,11 +41,15 @@ import retrofit2.Response;
 public class CalendarFragment extends Fragment {
     Date prevSelected = null;
     private HashMap<String, Object> extraData;
+    private RecyclerView mRecyclerView;
+    private JobsTimeAdapter mAdapter;
 
     public CalendarFragment() {
         // Required empty public constructor
     }
+
     CaldroidSampleCustomFragment caldroidFragment;
+
     private void setCustomResourceForDates() {
         Calendar cal = Calendar.getInstance();
 
@@ -60,10 +67,11 @@ public class CalendarFragment extends Fragment {
             ColorDrawable green = new ColorDrawable(Color.GREEN);
             caldroidFragment.setBackgroundDrawableForDate(blue, blueDate);
             caldroidFragment.setBackgroundDrawableForDate(green, greenDate);
-          //  caldroidFragment.setTextColorForDate(R.color.wh, blueDate);
-          //  caldroidFragment.setTextColorForDate(R.color.white, greenDate);
+            //  caldroidFragment.setTextColorForDate(R.color.wh, blueDate);
+            //  caldroidFragment.setTextColorForDate(R.color.white, greenDate);
         }
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,10 +80,17 @@ public class CalendarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-       View rootView = inflater.inflate(R.layout.calendar_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.calendar_fragment, container, false);
+        if (getActivity() == null){return  rootView;}
 
-      caldroidFragment = new CaldroidSampleCustomFragment();
+        caldroidFragment = new CaldroidSampleCustomFragment();
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
 
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(this.getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
         Bundle args = new Bundle();
 
         final SimpleDateFormat formatter = new SimpleDateFormat("dd MMM yyyy");
@@ -88,21 +103,52 @@ public class CalendarFragment extends Fragment {
 
                 ColorDrawable green = new ColorDrawable(Color.GREEN);
 
-                if (prevSelected!=null){
-                    caldroidFragment.clearSelectedDate(prevSelected);}
+                if (prevSelected != null) {
+                    caldroidFragment.clearSelectedDate(prevSelected);
+                }
                 prevSelected = date;
-caldroidFragment.setSelectedDate(date);
+                caldroidFragment.setSelectedDate(date);
 
                 caldroidFragment.refreshView();
-                Log.d("==Ela==",view.getTag().toString());
-               // view.setBackground(green);
+                if (view.getTag() != null) {
+                    ArrayList<String> items = (ArrayList<String>) view.getTag();
+
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    mAdapter = new JobsTimeAdapter(items);
+                    // mAdapter = new JobsAdapter(response.body());
+                    mRecyclerView.setAdapter(mAdapter);
+                } else {
+                    mRecyclerView.setVisibility(View.GONE);
+                }
+                // view.setBackground(green);
 
             }
 
             @Override
             public void onChangeMonth(int month, int year) {
-                String text = "month: " + month + " year: " + year;
+                String text = month + "." + year;
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.MONTH, 2);
+                DateTime dt = CalendarHelper.convertDateToDateTime(cal.getTime());
 
+                Log.d("==Ela==", text + " MONT " + dt.getMonth() + "." + dt.getYear());
+                if (caldroidFragment.getRightArrowButton() != null) {
+                    if (text.equals(dt.getMonth() + "." + dt.getYear())) {
+                        caldroidFragment.getRightArrowButton().setVisibility(View.GONE);
+                    } else {
+                        caldroidFragment.getRightArrowButton().setVisibility(View.VISIBLE);
+                    }
+                }
+                cal = Calendar.getInstance();
+                DateTime current = CalendarHelper.convertDateToDateTime(cal.getTime());
+                Log.d("==Ela==", text + " CUR " + current.getMonth() + "." + current.getYear());
+                if (caldroidFragment.getLeftArrowButton() != null) {
+                    if (text.equals(current.getMonth() + "." + current.getYear())) {
+                        caldroidFragment.getLeftArrowButton().setVisibility(View.GONE);
+                    } else {
+                        caldroidFragment.getLeftArrowButton().setVisibility(View.VISIBLE);
+                    }
+                }
             }
 
             @Override
@@ -112,38 +158,49 @@ caldroidFragment.setSelectedDate(date);
 
             @Override
             public void onCaldroidViewCreated() {
-                if (caldroidFragment.getLeftArrowButton() != null) {
-
+                if (caldroidFragment.getDateViewPager()!= null) {
+                    caldroidFragment.setEnableSwipe(false);
                 }
+
             }
 
         };
 
         // Setup Caldroid
         caldroidFragment.setCaldroidListener(listener);
-       extraData = new HashMap<String, Object>();
-       // extraData.put()
+        extraData = new HashMap<String, Object>();
+        // extraData.put()
         ApiFacade.getInstance().getApiService().
                 getAllJobs(StatusType.ACCEPTED).enqueue(new Callback<List<Job>>() {
             @Override
             public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
-                HashMap<String, ArrayList<Job>> calendarKeys = new  HashMap<String, ArrayList<Job>>();
-                for (int i = 0;i<response.body().size();i++){
-                    for (int j = 0;j<response.body().get(i).dates.size();j++){
-                    String key = FormatUtils.convertTimestamp(response.body().get(i).dates.get(j).starts_at,FormatUtils.PATTERN_DATE);
+                if (response.code()==200){
 
-                        if (calendarKeys.containsKey(key)){calendarKeys.get(key).add(response.body().get(i));}
-                        else {ArrayList<Job> jobs = new ArrayList<Job>();
-                        jobs.add(response.body().get(i));
+
+
+                HashMap<String, ArrayList<String>> calendarKeys = new HashMap<String, ArrayList<String>>();
+                for (int i = 0; i < response.body().size(); i++) {
+                    Collections.sort(response.body().get(i).dates);
+                    for (int j = 0; j < response.body().get(i).dates.size(); j++) {
+                        String key = FormatUtils.convertTimestamp(response.body().get(i).dates.get(j).starts_at, FormatUtils.PATTERN_DATE);
+
+                        if (calendarKeys.containsKey(key)) {
+                            calendarKeys.get(key).add(response.body().get(i).id + "," + response.body().get(i).dates.get(j).starts_at
+                                    + "," + response.body().get(i).dates.get(j).ends_at);
+                        } else {
+                            ArrayList<String> jobs = new ArrayList<String>();
+                            jobs.add(response.body().get(i).id + "," + response.body().get(i).dates.get(j).starts_at
+                                    + "," + response.body().get(i).dates.get(j).ends_at);
                             calendarKeys.put(key, jobs);
                         }
                     }
-                ;
+
                 }
 
-                extraData.put("extra",calendarKeys);
+                extraData.put("extra", calendarKeys);
                 caldroidFragment.setExtraData(extraData);
-//setCustomResourceForDates();
+
+                }
                 FragmentTransaction t = getChildFragmentManager().beginTransaction();
                 t.replace(R.id.calendar_container, caldroidFragment);
                 t.commit();

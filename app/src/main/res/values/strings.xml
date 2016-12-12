@@ -34,4 +34,7 @@
     <string name="tutorial_list">Tap to open the order preview. See your distance to a client in a green circle</string>
     <string name="tutorial_calendar">See all already accepted orders in your calendar and review the timetable</string>
     <string name="tutorial_map">Choose your orders on map near alredy accepted</string>
+    <string name="no_available_orders">No available orders</string>
+    <string name="confirming">By continuing, you agree with ours Terms Of Service and Privacy Policy</string>
+    <string name="login_by_email">Login by email</string>
 </resources>

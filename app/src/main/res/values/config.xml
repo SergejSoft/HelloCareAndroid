@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="customer_care_phone">+494050031359</string>
+    <string name="customer_care_phone" translatable="false">+494050031359</string>
 </resources>

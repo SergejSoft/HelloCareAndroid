@@ -96,11 +96,11 @@ accept =findViewById(R.id.accept);
         goToMap = findViewById(R.id.show_map);
         final int id = getIntent().getIntExtra(Statics.EXTRA_ID, 0);
 
-       // fetchJobDetails(id);
+        fetchJobDetails(id);
 
-        Job job = (Job) getIntent().getSerializableExtra(Statics.EXTRA_JOB);
+       // Job job = (Job) getIntent().getSerializableExtra(Statics.EXTRA_JOB);
 
-        populateJob(job);
+      //  populateJob(job);
 
         accept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,6 +203,7 @@ intent.putExtra(Statics.CURRENT_TAB, 2);
         timeStart.setText(FormatUtils.convertTimestamp(job.getNearestJob().starts_at,FormatUtils.PATTERN_TIME) );
         dateFinish.setText(FormatUtils.convertTimestamp(job.getNearestJob().ends_at,FormatUtils.PATTERN_DATE) );
         timeFinish.setText(FormatUtils.convertTimestamp(job.getNearestJob().ends_at,FormatUtils.PATTERN_TIME) );
+
 
 
         phone.setText(job.client.phone);

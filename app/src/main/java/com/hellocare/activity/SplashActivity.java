@@ -20,14 +20,20 @@ public class SplashActivity extends Activity {
         int secondsDelayed = 1;
         new Handler().postDelayed(new Runnable() {
             public void run() {
-                if (!SettingManager.getInstance().userLoggedIn()) {
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                if (SettingManager.getInstance().isFirstTimeLaunch()) {
+                    startActivity(new Intent(SplashActivity.this, WelcomeActivity.class));
+                    SettingManager.getInstance().setFirstTimeLaunch(false);
                     finish();
                 } else {
-                    Intent goToMainActivity = new Intent(SplashActivity.this, MainActivity.class);
-                    goToMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                    startActivity(goToMainActivity);
-                    finish();
+                    if (!SettingManager.getInstance().userLoggedIn()) {
+                        startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                        finish();
+                    } else {
+                        Intent goToMainActivity = new Intent(SplashActivity.this, MainActivity.class);
+                        goToMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                        startActivity(goToMainActivity);
+                        finish();
+                    }
                 }
             }
         }, secondsDelayed * 500);

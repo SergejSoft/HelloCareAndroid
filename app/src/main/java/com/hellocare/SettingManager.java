@@ -17,10 +17,11 @@ public class SettingManager {
     public static final String TOKEN_TYPE_FACEBOOK = "facebook";
     public static final String TOKEN_TYPE_HELLOCARE = "hellocare";
     private static SettingManager instance = null;
-
+    private static final String IS_FIRST_TIME_LAUNCH = "IsFirstTimeLaunch";
     private static final String TAG = "SettingManager";
 
     private static SharedPreferences mSharedPreferences;
+    public static String LAST_EMAIL = "LAST_EMAIL";
     private Context mContext;
 private  Location currentLocation;
     public static final String TOKEN = "Token";
@@ -50,6 +51,14 @@ private  Location currentLocation;
         Log.i(TAG, "mSharedPreferences = " + mSharedPreferences);
     }
 
+    public void setFirstTimeLaunch(boolean isFirstTime) {
+       saveValue(IS_FIRST_TIME_LAUNCH, isFirstTime);
+
+    }
+
+    public boolean isFirstTimeLaunch() {
+        return readValue(IS_FIRST_TIME_LAUNCH, true);
+    }
     public void saveValue(String key, boolean value) {
         Editor edit = mSharedPreferences.edit();
         edit.putBoolean(key, value);

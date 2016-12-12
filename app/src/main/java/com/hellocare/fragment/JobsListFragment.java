@@ -46,6 +46,7 @@ public class JobsListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private JobsAdapter mAdapter;
     private StatusType type;
+    private TextView errorText;
 
     public JobsListFragment() {
 
@@ -83,7 +84,7 @@ public class JobsListFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.jobs_list_fragment, container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
-
+       errorText= (TextView)rootView.findViewById(R.id.error_mesage);
         mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
@@ -102,6 +103,19 @@ public class JobsListFragment extends Fragment {
             @Override
             public void onResponse(Call<List<Job>> call, Response<List<Job>> response) {
                 //Handling expired  dates in jobs from Client side
+                if (response.code()!=200){
+                    mRecyclerView.setVisibility(View.GONE);
+                    errorText.setVisibility(View.VISIBLE);
+                    errorText.setText(getString(R.string.error));
+                    return;
+                }
+                if (response.body().size() == 0){
+                    mRecyclerView.setVisibility(View.GONE);
+                    errorText.setVisibility(View.VISIBLE);
+                    errorText.setText(getString(R.string.no_available_orders));
+                    return;}
+                mRecyclerView.setVisibility(View.VISIBLE);
+                errorText.setVisibility(View.GONE);
                List<Job> job = new ArrayList<Job>();
                 for (int i = 0; i < response.body().size(); i++){
                     if (response.body().get(i).getNearestJob() != null){

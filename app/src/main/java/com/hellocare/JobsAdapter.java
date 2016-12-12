@@ -77,7 +77,9 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.ViewHolder> {
         Collections.sort( mDataset.get(position).dates);
         String dateAdress = "<b>" + FormatUtils.timestampToProperString(holder.client.getContext(),
                 mDataset.get(position).getNearestJob().starts_at) + "</b>" +" "+
-                (mDataset.get(position).confirmation? mDataset.get(position).location.full_address:
+                (mDataset.get(position).confirmation?
+                        (mDataset.get(position).location==null||mDataset.get(position).location.full_address==null)?"":
+                        mDataset.get(position).location.full_address:
                         mDataset.get(position).location.secret_address) ;
         holder.dateAndAddress.setText(Html.fromHtml(dateAdress));
         if (SettingManager.getInstance().getCurrentLocation()!=null){
@@ -87,7 +89,7 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.ViewHolder> {
             location.setLongitude(mDataset.get(position).location.lng);
 
             float distance = SettingManager.getInstance().getCurrentLocation().distanceTo(location);
-        holder.distance.setText(Math.round(distance/1000 )+" "+holder.distance.getContext().getString(R.string.km));
+        holder.distance.setText(Math.round(distance/1000 )+"");
         }
         else {holder.distance.setVisibility(View.GONE);}
         holder.duration.setText("("+FormatUtils.formatDecimal(mDataset.get(position).dates.get(0).hours)+" "+
@@ -113,8 +115,7 @@ public class JobsAdapter extends RecyclerView.Adapter<JobsAdapter.ViewHolder> {
                                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(60
                                         , 60);
 imageView.setAdjustViewBounds(true);
-
-                               // layoutParams.setMargins(8, 8, 8, 8);
+                                layoutParams.setMargins(8, 8, 8, 8);
 
                                 imageView.setLayoutParams(layoutParams);
                                 Bitmap bitmap = ResourceUtil.

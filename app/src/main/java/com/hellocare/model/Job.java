@@ -55,14 +55,14 @@ public class Job implements Serializable, Comparable<Job> {
 
              if   (!new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(jobDate.starts_at).before(new Date())){
                  return  jobDate;
-             } ;
+             }
             } catch (ParseException e) {
                 e.printStackTrace();
-                return null;
+                return dates.get(0);
             }
         }
-        return  null;
-    };
+        return  dates.get(0);
+    }
 
     @Override
     public int compareTo(Job job) {

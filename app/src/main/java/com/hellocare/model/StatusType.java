@@ -4,12 +4,12 @@ package com.hellocare.model;
 public enum StatusType {
     //types of communication object
     DEFAULT("available"),
-    ACCEPTED("accepted"),
+    ACCEPTED("accepted"),AVAILABLE("available"),NEW("new"),
     ASSIGNED("assigned");
     private final String type;
 
 
-    private StatusType(String type) {
+    StatusType(String type) {
         this.type = type;
     }
 

@@ -16,6 +16,7 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.hellocare.MainActivity;
 import com.hellocare.R;
@@ -46,15 +47,18 @@ public class LoginActivity extends AppCompatActivity {
         // Edittext
         email = (EditText) findViewById(R.id.email);
         pass = (EditText) findViewById(R.id.password);
+        if (SettingManager.getInstance().readValue(SettingManager.LAST_EMAIL,"").length()!=0){
+            email.setText(SettingManager.getInstance().readValue(SettingManager.LAST_EMAIL,""));
+        }
 
         // Button
         sign_up = (Button) findViewById(R.id.signup);
         sign_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!validateEmailField()) {
-                    return;
-                }
+             //   if (!validateEmailField()) {
+             //       return;
+             //   }
                 if (pass.getText().toString().length() == 0) {
                     pass_txt.setError(getString(R.string.password_required));
                     return;
@@ -102,8 +106,22 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(Call<AuthResult> call, Response<AuthResult> response) {
                 Log.d(TAG, response.code() + "");
                 if (response.code() == 201) {
+                    SettingManager.getInstance().saveValue(SettingManager.LAST_EMAIL, email.getText().toString());
                     SettingManager.getInstance().saveValue(SettingManager.TOKEN, response.body().authentication_token);
                     FirebaseMessaging.getInstance().subscribeToTopic(response.body().location+"-jobs");
+                    ApiFacade.getInstance().getApiService().registerDevice(  FirebaseInstanceId.getInstance().getToken())
+                            .enqueue(new Callback<Object>() {
+                                @Override
+                                public void onResponse(Call<Object> call, Response<Object> response) {
+
+                                }
+
+                                @Override
+                                public void onFailure(Call<Object> call, Throwable t) {
+
+                                }
+                            });
+                  ;
                     Intent goToMainActivity = new Intent(LoginActivity.this, MainActivity.class);
                     goToMainActivity.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     startActivity(goToMainActivity);
@@ -139,6 +157,7 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         }
         email_txt.setError(null);
+
         return true;
     }
 

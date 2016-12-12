@@ -34,4 +34,7 @@
     <string name="tutorial_list">Anklicken für Vorschauf. Entfertnung zum Kunde in einer Zahl im grünen Kreis </string>
     <string name="tutorial_calendar">Alle berits bestätigte Auftäge in Ihrem Kalender</string>
     <string name="tutorial_map">Andere verfügbare Aufträge in der Nähe</string>
+    <string name="no_available_orders">Keine verfügbaren Aufträge</string>
+    <string name="confirming">By continuing, you agree with ours Terms Of Service and Privacy Policy</string>
+    <string name="login_by_email">Login by email</string>
 </resources>
